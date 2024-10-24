@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account',
+    'whatgroup',
     'rest_framework',
     'corsheaders'
 ]
@@ -167,6 +168,10 @@ EMAIL_PORT = 587
 #EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_USER = 'anishbro501625@gmail.com'
 # EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'pdad csms oywv zcge'
 EMAIL_USE_TLS = True
 
+
+# setting path for the image
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
