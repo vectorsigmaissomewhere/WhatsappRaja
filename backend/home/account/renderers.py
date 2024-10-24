@@ -1,7 +1,7 @@
-from rest_framework import renderers 
-import json 
+from rest_framework import renderers
+import json
 
-# this is mentioned in settings.py 
+# this is mentioned in settings.py
 class UserRenderer(renderers.JSONRenderer):
     charset = 'utf-8'
     def render(self, data, accepted_media_type=None, renderer_context=None):
