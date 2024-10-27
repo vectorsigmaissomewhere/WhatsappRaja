@@ -183,7 +183,7 @@ class WReview(models.Model):
     rating = models.IntegerField()
     comment_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    def __str__(self)
+    def __str__(self):
         return f'Review for {self.wgroup.group_name}'
     
 
