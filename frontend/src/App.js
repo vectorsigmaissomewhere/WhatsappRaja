@@ -1,10 +1,9 @@
 import React from 'react'
+import NavbarPanel from './components/NavbarPanel'
 
 const App = () => {
   return (
-    <div>
-      <h1>This is it</h1>
-    </div>
+    <NavbarPanel />
   )
 }
 
