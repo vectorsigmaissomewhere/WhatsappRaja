@@ -3,6 +3,7 @@ import NavbarPanel from './components/NavbarPanel'
 import HeroPanel from './components/HeroPanel'
 import DashboardButton from './components/DashboardButton'
 import Category from './components/Category'
+import ActiveParty from './components/ActiveParty'
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
       <HeroPanel />
       <DashboardButton />
       <Category />
+      <ActiveParty />
     </>
   )
 }

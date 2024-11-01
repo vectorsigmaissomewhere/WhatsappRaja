@@ -18,7 +18,7 @@ const Category = () => {
     };
   }, []);
   return (
-    <div className='flex flex-row bg-black text-white font-sans bg-gray-700'>
+    <div className='flex flex-row bg-black text-white font-sans bg-gray-700 gap-x-5'>
       {/* left side */}
       <div className='flex flex-col font-white text-10xl text-2xl font-medium'>
         <h2 className='underline underline-offset-8 decoration-blue-950 decoration-4'>CATEGORIES</h2>
@@ -155,15 +155,15 @@ const Category = () => {
         </div>
         <div>
           <div>
-            <div className='flex justify-center items-center text-6xl hover:bg-black'>
+            <div className='flex justify-center items-center text-6xl'>
             {!isOpen && (
               <>
-              <button className='px-1 py-1 min-h-3' onClick={toggleDropdown} ref={buttonRef}>v</button>
+              <button className='my-2 px-6 py-1 min-h-3 hover:bg-slate-300 hover:text-blue-950' onClick={toggleDropdown} ref={buttonRef}>v</button>
               </>
             )}
             {isOpen && (
               <>
-              <button className='px-1 py-1 min-h-3' onClick={toggleDropdown} ref={buttonRef}>^</button>
+              <button className='my-2 px-6 py-1 min-h-3 hover:bg-slate-300 hover:text-blue-950' onClick={toggleDropdown} ref={buttonRef}>^</button>
               </>
             )}
             </div>
