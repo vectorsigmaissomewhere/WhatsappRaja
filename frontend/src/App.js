@@ -4,6 +4,7 @@ import HeroPanel from './components/HeroPanel'
 import DashboardButton from './components/DashboardButton'
 import Category from './components/Category'
 import ActiveParty from './components/ActiveParty'
+import Footer from './components/Footer'
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <DashboardButton />
       <Category />
       <ActiveParty />
+      <Footer />
     </>
   )
 }
