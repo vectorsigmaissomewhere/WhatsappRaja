@@ -11,8 +11,8 @@ const ActiveParty = () => {
       </div>
 
       {/*bottom part */}
-      <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-white'>
-        <div className='bg-red-500 text-white text-2xl flex flex-col justify-center items-center h-[200px] rounded-lg p-4'>
+      <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-slate-600'>
+        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-[200px] rounded-lg p-4'>
           <div className='flex flex-row justify-items-end items-end'>
             <FaStar />
             <FaStar />
@@ -31,7 +31,7 @@ const ActiveParty = () => {
           </div>
         </div>
 
-        <div className='bg-red-500 text-white text-2xl flex flex-col justify-center items-center h-[200px] rounded-lg p-4'>
+        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-[200px] rounded-lg p-4'>
           <div className='flex flex-row justify-items-end'>
             <FaStar />
             <FaStar />
@@ -50,7 +50,7 @@ const ActiveParty = () => {
           </div>
         </div>
 
-        <div className='bg-red-500 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
+        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
           <div className='flex flex-row justify-items-end'>
             <FaStar />
             <FaStar />
@@ -93,7 +93,7 @@ const ActiveParty = () => {
           </div>
         </div>
         {/*This is it */}
-        <div className='bg-red-500 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
+        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
           <div className='flex flex-row justify-items-end'>
             <FaStar />
             <FaStar />
@@ -135,7 +135,7 @@ const ActiveParty = () => {
             [ Join today. ] 🇯🇵
           </div>
         </div>
-        <div className='bg-red-500 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
+        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
           <div className='flex flex-row justify-items-end'>
             <FaStar />
             <FaStar />
