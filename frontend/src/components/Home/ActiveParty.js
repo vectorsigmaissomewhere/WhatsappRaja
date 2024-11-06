@@ -1,6 +1,6 @@
 import React from 'react'
 import { FaStar } from 'react-icons/fa';
-import serverpic from '../images/lanadelrey.jpg';
+import serverpic from '../../images/lanadelrey.jpg';
 const ActiveParty = () => {
   return (
     <div className='flex flex-col bg-slate-600'>

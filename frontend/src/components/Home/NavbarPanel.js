@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { FaSearch } from 'react-icons/fa';
 import { FaUsers } from 'react-icons/fa';
 import { FaStar } from 'react-icons/fa';
-import logo from '../images/lanadelrey.jpg';
+import logo from '../../images/lanadelrey.jpg';
 
 const NavbarPanel = () => {
     const [isOpen, setIsOpen] = useState(false);

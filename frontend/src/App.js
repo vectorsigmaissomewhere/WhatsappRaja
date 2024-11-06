@@ -1,18 +1,22 @@
 import React from 'react'
-import NavbarPanel from './components/NavbarPanel'
-import HeroPanel from './components/HeroPanel'
-import DashboardButton from './components/DashboardButton'
-import Category from './components/Category'
-import ActiveParty from './components/ActiveParty'
-import Footer from './components/Footer'
+import NavbarPanel from './components/Home/NavbarPanel'
+import HeroPanel from './components/Home/HeroPanel'
+import DashboardButton from './components/Home/DashboardButton'
+import Category from './components/Home/Category'
+import ActiveParty from './components/Home/ActiveParty'
+import Footer from './components/Home/Footer'
+
+// testing for search bar 
+import SearchBar from './components/Search/SearchBar'
+import CategorySearch from './components/Search/CategorySearch'
+
 
 const App = () => {
   return (
     <>
       <NavbarPanel />
-      <HeroPanel />
-      <DashboardButton />
-      <Category />
+      <SearchBar />
+      <CategorySearch />
       <ActiveParty />
       <Footer />
     </>
