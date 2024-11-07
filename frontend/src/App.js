@@ -10,12 +10,15 @@ import Footer from './components/Home/Footer'
 import SearchBar from './components/Search/SearchBar'
 import CategorySearch from './components/Search/CategorySearch'
 
+// testing for after search
+import SearchedTag from './components/Searched/SearchedTag'
+
 
 const App = () => {
   return (
     <>
       <NavbarPanel />
-      <SearchBar />
+      <SearchedTag />
       <CategorySearch />
       <ActiveParty />
       <Footer />
