@@ -25,7 +25,7 @@ const SearchedTag = () => {
                 <p className='text-lg text-white'>What server tagged with</p>
                 <p className='bg-cyan-400 text-lg text-white px-1 py-1'>rapping</p>
             </div>
-            <div>
+            <div className='flex gap-x-40'>
                 <div className='flex flex-row text-white'>
                     <Switch {...label} defaultChecked />
                     <h2>NSFW</h2>

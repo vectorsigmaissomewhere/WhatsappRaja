@@ -14,11 +14,18 @@ import CategorySearch from './components/Search/CategorySearch'
 import SearchedTag from './components/Searched/SearchedTag'
 
 
+//public groups 
+import AllGroup from './components/Group/AllGroup'
+
+// public filter 
+import ReviewFilter from './components/Reviews/ReviewFilter'
+
 const App = () => {
   return (
     <>
       <NavbarPanel />
-      <SearchedTag />
+      <AllGroup />
+      <ReviewFilter />
       <CategorySearch />
       <ActiveParty />
       <Footer />
