@@ -19,6 +19,7 @@ import AllGroup from './components/Group/AllGroup'
 
 // public filter 
 import ReviewFilter from './components/Reviews/ReviewFilter'
+import ReviewList from './components/Reviews/ReviewList'
 
 const App = () => {
   return (
@@ -27,7 +28,7 @@ const App = () => {
       <AllGroup />
       <ReviewFilter />
       <CategorySearch />
-      <ActiveParty />
+      <ReviewList />
       <Footer />
     </>
   )
