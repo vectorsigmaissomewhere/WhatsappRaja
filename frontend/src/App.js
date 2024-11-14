@@ -24,10 +24,13 @@ import AddGroup from './components/UserDashboard/AddGroup'
 // authentication
 //import Register from './components/Auth/Register'
 
+// new imports 
+import Home from './components/Home/Home'
+
 const App = () => {
   return (
     <>
-    <AddGroup />
+    <Home />
     </>
   )
 }
