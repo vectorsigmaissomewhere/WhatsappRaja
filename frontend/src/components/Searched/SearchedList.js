@@ -1,4 +1,6 @@
 import React from 'react'
+import { FaStar } from 'react-icons/fa';
+import serverpic from '../../images/lanadelrey.jpg';
 
 const SearchedList = () => {
   return (

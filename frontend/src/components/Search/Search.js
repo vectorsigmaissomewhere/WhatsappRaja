@@ -1,8 +1,8 @@
 import React from 'react'
 import NavbarPanel from '../Home/NavbarPanel';
-import Search from '../Search/SearchBar'
-import CategorySearch from './Search/CategorySearch';
-import HeroPanel from '../Home/HeroPanel';
+import SearchBar from '../Search/SearchBar'
+import CategorySearch from '../Search/CategorySearch';
+import Footer from '../Home/Footer';
 
 const Search = () => {
   return (
@@ -10,7 +10,7 @@ const Search = () => {
       <NavbarPanel />
       <SearchBar />
       <CategorySearch />
-      <HeroPanel />
+      <Footer />
     </div>
   )
 }

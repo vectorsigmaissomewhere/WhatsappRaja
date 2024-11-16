@@ -1,37 +1,32 @@
 import React from 'react'
-//import NavbarPanel from './components/Home/NavbarPanel'
-//import Footer from './components/Home/Footer'
-
-// testing for search bar 
-//import CategorySearch from './components/Search/CategorySearch'
-
-// testing for after search
-//import SearchedTag from './components/Searched/SearchedTag'
-
-
-//public groups 
-import AllGroup from './components/Group/AllGroup'
-import AddGroup from './components/UserDashboard/AddGroup'
-
-// public filter 
-//import ReviewFilter from './components/Reviews/ReviewFilter'
-//import ReviewList from './components/Reviews/ReviewList'
-
-// dashboard
-//import DashboardTag from './components/UserDashboard/DashboardTag'
-//import AddGroup from './components/UserDashboard/AddGroup'
-
-// authentication
-//import Register from './components/Auth/Register'
-
-// new imports 
 import Home from './components/Home/Home'
+import Search from './components/Search/Search'
+import Group from './components/Group/Group'
+import Review from './components/Reviews/Review'
+import Dashboard from './components/UserDashboard/UserDashboard'
+import Searched from './components/Searched/Searched'
+import Login from './components/Auth/Login'
+import Register from './components/Auth/Register'
+import ResetPasswordMail from './components/Auth/ResetPasswordMail'
+import AppendReview from './components/AppendReview/AppendReview'
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 const App = () => {
   return (
-    <>
-    <Home />
-    </>
+    <Router>
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/search' element={<Search />}/>
+      <Route path='/group' element={<Group />}/>
+      <Route path='/review' element={<Review />}/>
+      <Route path='/dashboard' element={<Dashboard />}/>
+      <Route path='/searched' element={<Searched />}/>
+      <Route path='/login' element={<Login />}/>
+      <Route path='/register' element={<Register />}/>
+      <Route path='/resetpassmail' element={<ResetPasswordMail />}/>
+      <Route path='/addreview' element={<AppendReview />}/>
+    </Routes>
+  </Router>
   )
 }
 

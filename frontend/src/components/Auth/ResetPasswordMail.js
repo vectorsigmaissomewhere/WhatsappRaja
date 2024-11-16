@@ -5,7 +5,7 @@ const ResetPasswordMail = () => {
     <div>
       <div className='min-h-screen flex flex-col justify-center items-center bg-gray-800'>
             <div className='flex flex-col bg-gray-500 p-8 rounded'>
-            <h2 className='flex justify-center items-center text-lg'>Login</h2>
+            <h2 className='flex justify-center items-center text-lg'>Reset Password</h2>
                 <div className='mb-4'>
                     <label className='py-2 text-lg'>Email Address</label>
                     <input className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700' />

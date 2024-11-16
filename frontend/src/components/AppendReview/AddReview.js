@@ -10,7 +10,7 @@ const AddReview = () => {
         {label: "5", value: 5}
       ];
   return (
-    <div className="mx-4">
+    <div className="bg-gray-600 text-white font-semibold py-2">
             <form>
               <div>
                 {/* Group Name */}

@@ -3,7 +3,7 @@ import NavbarPanel from '../Home/NavbarPanel';
 import ReviewTop from '../Reviews/ReviewTop';
 import ReviewFilter from '../Reviews/ReviewFilter';
 import ReviewList from '../Reviews/ReviewList';
-import HeroPanel from '../Home/HeroPanel';
+import Footer from '../Home/Footer';
 
 const Review = () => {
   return (
@@ -12,7 +12,7 @@ const Review = () => {
       <ReviewTop />
       <ReviewFilter />
       <ReviewList />
-      <HeroPanel />
+      <Footer />
     </div>
   )
 }
