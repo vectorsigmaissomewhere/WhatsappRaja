@@ -126,7 +126,7 @@ AUTH_USER_MODEL = 'account.User'
 
 # CORS to avoid conflict with React JS
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173', # front-end URL
+    'http://localhost:3000', # front-end URL
 ]
 
 REST_FRAMEWORK = {
