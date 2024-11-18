@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from account.renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken # generate token
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 
 # Generate Token Manually
@@ -16,6 +17,20 @@ def get_token_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
+    
+# In-Memory Email Storage
+class StoreEmail:
+    def __init__(self):
+        self.stored_emails = []
+
+    def store(self, email):
+        self.stored_emails.append(email)
+        print(f"Stored email: {email}")
+
+
+# Instance to store emails
+store_email_instance = StoreEmail()
+
 
 class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer] # will show the error that your have provided
@@ -30,6 +45,7 @@ class UserRegistrationView(APIView):
     
 class UserLoginView(APIView):
     renderer_classes = [UserRenderer] # will show the error that your have provided
+    permission_classes = [AllowAny]
     def post(self, request, format=None):
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -38,6 +54,8 @@ class UserLoginView(APIView):
             user = authenticate(email=email, password=password)
             if user is not None:
                 token = get_token_for_user(user)
+                print(user.email)
+                store_email_instance.store(email) 
                 return Response({'token':token, 'msg':'Login Success'}, status=status.HTTP_200_OK)
             else:
                 return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
@@ -113,3 +131,5 @@ def canwesend(request):
         return HttpResponse("Make sure all fields are entered and valid.")
 """
 
+
+    

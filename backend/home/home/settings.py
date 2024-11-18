@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account',
     'whatgroup',
+    'privategroup',
     'rest_framework',
     'corsheaders'
 ]
