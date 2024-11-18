@@ -1,20 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { FaSearch } from 'react-icons/fa';
-import { FaUsers } from 'react-icons/fa';
-import { FaStar } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from 'react';
+import { FaSearch, FaUsers, FaStar } from 'react-icons/fa';
 import logo from '../../images/lanadelrey.jpg';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 
 const NavbarPanel = () => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
+    const navigate = useNavigate();
+
+    const menuItems = [
+        { path: '/search', icon: <FaSearch />, label: 'Search' },
+        { path: '/group', icon: <FaUsers />, label: 'Servers' },
+        { path: '/review', icon: <FaStar />, label: 'Reviews' },
+    ];
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
-    useEffect(()=>{
+    const toggleSignout = () => {
+        localStorage.removeItem('authToken');
+        alert('Signed out successfully.'); 
+        navigate('/');
+    };
+
+    useEffect(() => {
         const handleClickOutside = (event) => {
-            if(menuRef.current && !menuRef.current.contains(event.target)&& !buttonRef.current.contains(event.target)){
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target) &&
+                !buttonRef.current.contains(event.target)
+            ) {
                 setIsOpen(false);
             }
         };
@@ -23,51 +38,68 @@ const NavbarPanel = () => {
             document.removeEventListener('click', handleClickOutside);
         };
     }, []);
-  return (
-    <header>
-        <nav className="bg-black border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800 flex justify-between p-20 border-b-2-white sticky top-0 z-1000">
-            {/*left division */}
-            <div className="text-white flex justify-center">
-                <Link to={"/"}>
-                <div className="px-10 py-2 flex items-center bg-slate-50 text-black">
-                    <img src={logo} alt="Logo" className="h-10 w-auto rounded-full mr-2"/>
-                    <span className='text-lg'>whatraja</span>
-                </div>
-                </Link>
-                <div className="px-10 py-2 flex items-center">
-                    <Link to={"/search"}><FaSearch className="w-5 h-auto mr-2"/></Link>
-                    <span className="text-lg "><Link to={"/search"}>search</Link></span>
-                </div>
-                <div className="px-10 py-2 flex items-center">
-                    <Link to={"/group"}><FaUsers className='w-5 h-auto mr-2'/></Link>
-                    <span className='text-lg'><Link to={"/group"}>servers</Link></span>
-                </div>
-                <div className="px-10 py-2 flex items-center">
-                    <Link to={"/review"}><FaStar className='w-5 h-auto mr-2'/></Link>
-                    <span className='text-lg'><Link to={"/review"}>reviews</Link></span>
-                </div>
-            </div>
-            {/*right division */}
-            <div className="text-white flex justify-center">
-                <div className="px-10 py-2 flex items-center">
-                <button className='text-lg' id='menu-button' onClick={toggleDropdown} ref={buttonRef}>dashboard</button>
-                </div>
-                {isOpen && (
-                <div className="absolute right-0 z-10 mt-12 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" ref={menuRef}>
-                    <div className="py-1" role='none'>
-                        <Link to={"/dashboard"}><a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-0">Dashboard</a></Link>
-                        <a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-1">Support</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-2">License</a>
-                        <form method="POST">
-                            <button type='submit' class='block w-full px-2 text-sm text-gray-700' role='menuitem' tabIndex='-1' id='menuitem-3'>Sign out</button>
-                        </form>
+
+    return (
+        <header>
+            <nav className="bg-black px-4 lg:px-6 py-2.5 sticky top-0 z-[1000]">
+                <div className="flex justify-between items-center">
+                    {/* Left Division */}
+                    <div className="text-white flex">
+                        <Link to="/">
+                            <div className="px-10 py-2 flex items-center bg-slate-50 text-black">
+                                <img src={logo} alt="Logo" className="h-10 w-auto rounded-full mr-2" />
+                                <span className="text-lg">whatraja</span>
+                            </div>
+                        </Link>
+                        {menuItems.map(({ path, icon, label }) => (
+                            <div key={label} className="px-10 py-2 flex items-center">
+                                <Link to={path}>{icon}</Link>
+                                <span className="text-lg mx-2">
+                                    <Link to={path}>{label}</Link>
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Right Division */}
+                    <div className="text-white flex">
+                        <div className="px-10 py-2 flex items-center">
+                            <button
+                                className="text-lg"
+                                id="menu-button"
+                                onClick={toggleDropdown}
+                                ref={buttonRef}
+                            >
+                                Dashboard
+                            </button>
+                        </div>
+                        {isOpen && (
+                            <div
+                                className="absolute right-0 z-20 mt-12 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                                role="menu"
+                                aria-orientation="vertical"
+                                aria-labelledby="menu-button"
+                                ref={menuRef}
+                            >
+                                <div className="py-1">
+                                    <Link to="/dashboard" className="block px-4 py-2 text-sm text-gray-700">
+                                        Dashboard
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        onClick={toggleSignout}
+                                        className="block w-full px-4 py-2 text-sm text-gray-700 text-left"
+                                    >
+                                        Sign out
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-                )}
-            </div>
-        </nav>
-    </header>
-  )
-}
+            </nav>
+        </header>
+    );
+};
 
-export default NavbarPanel
+export default NavbarPanel;
