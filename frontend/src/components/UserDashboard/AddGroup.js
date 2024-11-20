@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import UserGroup from '../UserDashboard/UserGroup';
 
 const AddGroup = () => {
   const options = [
@@ -59,6 +60,33 @@ const AddGroup = () => {
     };
   }, [profileRef, buttonProfileRef]);
 
+  // group button states and refs
+  const [isGroupButton, setIsGroupButton] = useState(false);
+  const groupRef = useRef(null);
+  const buttonGroupRef = useRef(null);
+
+  // Toggle the group button state
+  const toggleGroup = () => setIsGroupButton((prev) => !prev);
+
+  useEffect(() => {
+    const handleClickGroupOutside = (event) => {
+      if (
+        groupRef.current &&
+        !groupRef.current.contains(event.target) &&
+        buttonGroupRef.current &&
+        !buttonGroupRef.current.contains(event.target)
+      ) {
+        setIsGroupButton(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickGroupOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickGroupOutside);
+    };
+  }, [groupRef, buttonGroupRef]);
+
   return (
     <>
       <div className="bg-gray-500 text-white font-semibold py-6">
@@ -77,9 +105,12 @@ const AddGroup = () => {
           >
             Edit Password
           </button>
+          <button className='bg-cyan-500 px-4 py-2 text-lg rounded ml-4' onClick={toggleGroup} ref={buttonGroupRef}>
+            Your Group
+          </button>
         </div>
 
-        {isOpen && !isButtonOpen && (
+        {isOpen && !isButtonOpen && !isGroupButton && (
           <div className="mx-4" ref={catRef}>
             <form>
               <div>
@@ -195,7 +226,7 @@ const AddGroup = () => {
           </div>
         )}
 
-        {isButtonOpen && !isOpen && (
+        {isButtonOpen && !isOpen && !isGroupButton && (
           <div ref={profileRef}>
             <form>
               <div>
@@ -228,6 +259,12 @@ const AddGroup = () => {
           </div>
         )}
       </div>
+
+      {/*showing all the user group that is added by the author */}
+      {isGroupButton && !isButtonOpen && !isOpen && (
+        <UserGroup isGroupButton={isGroupButton} />
+      )}
+
     </>
   );
 };
