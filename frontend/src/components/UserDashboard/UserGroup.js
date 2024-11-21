@@ -1,203 +1,70 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa';
 import serverpic from '../../images/lanadelrey.jpg';
 import axios from 'axios';
-import GroupList from '../Group/GroupList';
+
+const UserGroupCard = ({ groupData, isGroupButton }) => (
+    <div className='bg-gray-700 text-white text-lg flex flex-col justify-between items-start h-fit rounded-lg p-4'>
+        <div className='flex flex-row items-center mb-4'>
+            <FaStar className='text-yellow-500' />
+            <FaStar className='text-yellow-500' />
+            <FaStar className='text-yellow-500' />
+            <FaStar className='text-yellow-500' />
+            <FaStar className='text-yellow-500' />
+            <p className='ml-2 text-sm'>(14 reviews)</p>
+        </div>
+        <div className='flex flex-row items-center mb-4'>
+            <img src={serverpic} alt="Group Avatar" className="h-12 w-12 rounded-full mr-3" />
+            <div>
+                <h2 className='font-bold text-xl'>{groupData.group_name || 'Ecom Warriors'}</h2>
+                <p className='text-sm'>{groupData.category || 'Category Name'}</p>
+                {isGroupButton && (
+                    <button className='mt-2 bg-indigo-700 px-3 py-1 rounded-lg text-sm'>Join Group</button>
+                )}
+            </div>
+        </div>
+        <div className='flex flex-wrap gap-2'>
+            {groupData.tags?.map((tag, index) => (
+                <button
+                    key={index}
+                    className='text-xs px-2 py-1 bg-gray-800 rounded-lg text-sm font-medium'
+                >
+                    {tag}
+                </button>
+            ))}
+        </div>
+    </div>
+);
 
 const UserGroup = ({ isGroupButton }) => {
-    const url = "http://127.0.0.1:8000/pgroupapi/";
     const [privateGroupData, setPrivateGroupData] = useState([]);
+    const [error, setError] = useState(null);
 
-    const fetchGroupData = () => {
-        return axios.get(url).then((res) => setPrivateGroupData(res.data));
-    }
+    const fetchGroupData = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/pgroupapi/');
+            setPrivateGroupData(response.data);
+        } catch (err) {
+            setError('Failed to load group data. Please try again later.');
+        }
+    };
+
     useEffect(() => {
         fetchGroupData();
-    }, [])
+    }, []);
 
     return (
         <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-slate-600'>
-            <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-[200px] rounded-lg p-4'>
-                <div className='flex flex-row justify-items-end items-end'>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <p>(14 reviews)</p>
-                </div>
-                <div className='flex flex-row mt-4'>
-                    <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-                    <div>
-                        <h2>Ecom warriors</h2>
-                        <button>9891 user</button>
-                        <button>category name</button>
-                    </div>
-                </div>
-            </div>
-
-            <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-[200px] rounded-lg p-4'>
-                <div className='flex flex-row justify-items-end'>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <p>(14 reviews)</p>
-                </div>
-                <div className='flex flex-row mt-4'>
-                    <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-                    <div>
-                        <h2>Ecom warriors</h2>
-                        <button>9891 user</button>
-                        <button>category name</button>
-                    </div>
-                </div>
-            </div>
-
-            <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
-                <div className='flex flex-row justify-items-end'>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <p>(14 reviews)</p>
-                </div>
-                <div className='flex flex-row mt-4'>
-                    <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-                    <div>
-                        <h2 className='mx-1'>Ecom warriors</h2>
-                        <button className='mx-1 bg-indigo-700 px-2 py-1 rounded-lg'>9891 user</button>
-                        <button className='mx-1'>category name</button>
-                    </div>
-                </div>
-                {/*tags*/}
-                <div>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>CHILL</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>ACTIVE</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CHAT</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VC</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CALLS</button>
-                </div>
-                <div className='text-base whitespace-pre-line'>
-                    🎌𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀🎌 東京卍リベンジャーズ
-                    [ discord.gg/tokyorevengers ]
-                    [ official r/TokyoRevengers Subreddit Server ]
-
-                    - Discord server dedicated to Tokyo Revengers Anime/Manga
-                    - TR Discussions with a great community!
-                    - ACTIVE CHAT and FRIENDLY STAFF!
-                    - LEVEL 3 BOOST
-                    - BEST TOKYO REVENGERS EMOTES RIGHT HERE!
-                    - BEST TOKYO REVENGERS SERVER RIGHT HERE!
-
-                    NOTE:
-                    ⚠️𝗜𝗳 𝘆𝗼𝘂 𝗮𝗿𝗲 𝗻𝗼𝘁 𝗳𝗮𝗺𝗶𝗹𝗶𝗮𝗿 𝘄𝗶𝘁𝗵 𝗧𝗵𝗲 𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀 𝗺𝗮𝗻𝗴𝗮 𝘀𝗲𝗿𝗶𝗲𝘀, 𝘁𝗵𝗲 卍 𝘀𝘆𝗺𝗯𝗼𝗹 𝗶𝗻 𝘁𝗵𝗲 𝗻𝗮𝗺𝗲 𝗼𝗳 𝘁𝗵𝗶𝘀 𝘀𝗲𝗿𝘃𝗲𝗿 𝗶𝘀 𝗻𝗼𝘁 𝗶𝗻𝘁𝗲𝗻𝗱𝗲𝗱 𝘁𝗼 𝗯𝗲 𝘁𝗵𝗲 𝗡𝗮𝘇𝗶 𝘀𝘆𝗺𝗯𝗼𝗹. 𝗜𝘁 𝗶𝘀 𝘁𝗵𝗲 𝗠𝗮𝗻𝗷𝗶 𝘀𝘆𝗺𝗯𝗼𝗹, 𝘂𝘀𝗲𝗱 𝗶𝗻 𝗕𝘂𝗱𝗱𝗵𝗶𝘀𝘁 𝘁𝗲𝗺𝗽𝗹𝗲𝘀 𝗼𝗳 𝗝𝗮𝗽𝗮𝗻. 𝗪𝗲 𝗱𝗼 𝗻𝗼𝘁 𝘀𝘂𝗽𝗽𝗼𝗿𝘁 𝗡𝗮𝘇𝗶𝘀𝗺 𝗶𝗻 𝗮𝗻𝘆 𝘄𝗮𝘆. ⚠️
-                    [ Join today. ] 🇯🇵
-                </div>
-            </div>
-            {/*This is it */}
-            <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
-                <div className='flex flex-row justify-items-end'>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <p>(14 reviews)</p>
-                </div>
-                <div className='flex flex-row mt-4'>
-                    <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-                    <div>
-                        <h2 className='mx-1'>Ecom warriors</h2>
-                        <button className='mx-1 bg-indigo-700 px-2 py-1 rounded-lg'>9891 user</button>
-                        <button className='mx-1'>category name</button>
-                    </div>
-                </div>
-                {/*tags*/}
-                <div>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>CHILL</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>ACTIVE</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CHAT</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VC</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CALLS</button>
-                </div>
-                <div className='text-base whitespace-pre-line'>
-                    🎌𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀🎌 東京卍リベンジャーズ
-                    [ discord.gg/tokyorevengers ]
-                    [ official r/TokyoRevengers Subreddit Server ]
-
-                    - Discord server dedicated to Tokyo Revengers Anime/Manga
-                    - TR Discussions with a great community!
-                    - ACTIVE CHAT and FRIENDLY STAFF!
-                    - LEVEL 3 BOOST
-                    - BEST TOKYO REVENGERS EMOTES RIGHT HERE!
-                    - BEST TOKYO REVENGERS SERVER RIGHT HERE!
-
-                    NOTE:
-                    ⚠️𝗜𝗳 𝘆𝗼𝘂 𝗮𝗿𝗲 𝗻𝗼𝘁 𝗳𝗮𝗺𝗶𝗹𝗶𝗮𝗿 𝘄𝗶𝘁𝗵 𝗧𝗵𝗲 𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀 𝗺𝗮𝗻𝗴𝗮 𝘀𝗲𝗿𝗶𝗲𝘀, 𝘁𝗵𝗲 卍 𝘀𝘆𝗺𝗯𝗼𝗹 𝗶𝗻 𝘁𝗵𝗲 𝗻𝗮𝗺𝗲 𝗼𝗳 𝘁𝗵𝗶𝘀 𝘀𝗲𝗿𝘃𝗲𝗿 𝗶𝘀 𝗻𝗼𝘁 𝗶𝗻𝘁𝗲𝗻𝗱𝗲𝗱 𝘁𝗼 𝗯𝗲 𝘁𝗵𝗲 𝗡𝗮𝘇𝗶 𝘀𝘆𝗺𝗯𝗼𝗹. 𝗜𝘁 𝗶𝘀 𝘁𝗵𝗲 𝗠𝗮𝗻𝗷𝗶 𝘀𝘆𝗺𝗯𝗼𝗹, 𝘂𝘀𝗲𝗱 𝗶𝗻 𝗕𝘂𝗱𝗱𝗵𝗶𝘀𝘁 𝘁𝗲𝗺𝗽𝗹𝗲𝘀 𝗼𝗳 𝗝𝗮𝗽𝗮𝗻. 𝗪𝗲 𝗱𝗼 𝗻𝗼𝘁 𝘀𝘂𝗽𝗽𝗼𝗿𝘁 𝗡𝗮𝘇𝗶𝘀𝗺 𝗶𝗻 𝗮𝗻𝘆 𝘄𝗮𝘆. ⚠️
-                    [ Join today. ] 🇯🇵
-                </div>
-            </div>
-            {privateGroupData.map((dataObj, index) => (
-                <div key={index}>
-                    <h2>{dataObj.user}</h2>
-                    <h2>{dataObj.group_name}</h2>
-                    <h2>{dataObj.language}</h2>
-                    <h2>{dataObj.category}</h2>
-                    <h2>{dataObj.tags}</h2>
-                    <h2>{dataObj.nsfw}</h2>
-                    <h2>{dataObj.description}</h2>
-                    <h2>{dataObj.created_at}</h2>
-                    <h2>{dataObj.updated_at}</h2>
-                </div>
-            ))}
-
-            <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
-                <div className='flex flex-row justify-items-end'>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <p>(14 reviews)</p>
-                </div>
-                <div className='flex flex-row mt-4'>
-                    <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-                    <div>
-                        <h2 className='mx-1'>Ecom warriors</h2>
-                        <button className='mx-1 bg-indigo-700 px-2 py-1 rounded-lg'>9891 user</button>
-                        <button className='mx-1'>category name</button>
-                    </div>
-                </div>
-                {/*tags*/}
-                <div>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>CHILL</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>ACTIVE</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CHAT</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VC</button>
-                    <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CALLS</button>
-                </div>
-                <div className='text-base whitespace-pre-line'>
-                    🎌𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀🎌 東京卍リベンジャーズ
-                    [ discord.gg/tokyorevengers ]
-                    [ official r/TokyoRevengers Subreddit Server ]
-
-                    - Discord server dedicated to Tokyo Revengers Anime/Manga
-                    - TR Discussions with a great community!
-                    - ACTIVE CHAT and FRIENDLY STAFF!
-                    - LEVEL 3 BOOST
-                    - BEST TOKYO REVENGERS EMOTES RIGHT HERE!
-                    - BEST TOKYO REVENGERS SERVER RIGHT HERE!
-
-                    NOTE:
-                    ⚠️𝗜𝗳 𝘆𝗼𝘂 𝗮𝗿𝗲 𝗻𝗼𝘁 𝗳𝗮𝗺𝗶𝗹𝗶𝗮𝗿 𝘄𝗶𝘁𝗵 𝗧𝗵𝗲 𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀 𝗺𝗮𝗻𝗴𝗮 𝘀𝗲𝗿𝗶𝗲𝘀, 𝘁𝗵𝗲 卍 𝘀𝘆𝗺𝗯𝗼𝗹 𝗶𝗻 𝘁𝗵𝗲 𝗻𝗮𝗺𝗲 𝗼𝗳 𝘁𝗵𝗶𝘀 𝘀𝗲𝗿𝘃𝗲𝗿 𝗶𝘀 𝗻𝗼𝘁 𝗶𝗻𝘁𝗲𝗻𝗱𝗲𝗱 𝘁𝗼 𝗯𝗲 𝘁𝗵𝗲 𝗡𝗮𝘇𝗶 𝘀𝘆𝗺𝗯𝗼𝗹. 𝗜𝘁 𝗶𝘀 𝘁𝗵𝗲 𝗠𝗮𝗻𝗷𝗶 𝘀𝘆𝗺𝗯𝗼𝗹, 𝘂𝘀𝗲𝗱 𝗶𝗻 𝗕𝘂𝗱𝗱𝗵𝗶𝘀𝘁 𝘁𝗲𝗺𝗽𝗹𝗲𝘀 𝗼𝗳 𝗝𝗮𝗽𝗮𝗻. 𝗪𝗲 𝗱𝗼 𝗻𝗼𝘁 𝘀𝘂𝗽𝗽𝗼𝗿𝘁 𝗡𝗮𝘇𝗶𝘀𝗺 𝗶𝗻 𝗮𝗻𝘆 𝘄𝗮𝘆. ⚠️
-                    [ Join today. ] 🇯🇵
-                </div>
-            </div>
+            {error && <div className="text-red-500 col-span-full">{error}</div>}
+            {privateGroupData.length === 0 && !error ? (
+                <div className="col-span-full text-center text-white">Loading groups...</div>
+            ) : (
+                privateGroupData.map((group, index) => (
+                    <UserGroupCard key={index} groupData={group} isGroupButton={isGroupButton} />
+                ))
+            )}
         </div>
-    )
-}
+    );
+};
 
-export default UserGroup
+export default UserGroup;

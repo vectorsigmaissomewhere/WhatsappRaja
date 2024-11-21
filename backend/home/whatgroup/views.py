@@ -5,6 +5,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from account.renderers import UserRenderer
 from rest_framework import status
+# using GenericAPIView and ListModelMixin
+from rest_framework.generics import ListAPIView
+from rest_framework.mixins import ListModelMixin 
+from .serializers import CategorySerializer
+from rest_framework.renderers import JSONRenderer 
+from django.http import HttpResponse
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import AllowAny
 
 # This viewset is for public like everyone can retrieve data, list data, create data 
 class WGroupModelViewSet(viewsets.ViewSet):
@@ -47,8 +55,11 @@ class WGroupModelViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     """
 
-        
-
+class CategoryViewSet(ReadOnlyModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = Wgroup.objects.values('category').distinct()
+    print(queryset)
+    serializer_class = CategorySerializer
 
 class WGroupModelReviewViewSet(viewsets.ModelViewSet):
     queryset = WReview.objects.all()

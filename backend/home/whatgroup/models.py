@@ -162,6 +162,7 @@ class Wgroup(models.Model):
     )
     nsfw = models.BooleanField(default=False, help_text="Mark this group as NSFW")
     description = models.TextField()
+    group_image = models.ImageField(upload_to='groupimage/', blank=True, null=True)
     qr_code = models.ImageField(upload_to='qrcodes/', blank=True, null=True)
     whatsapplink = models.URLField(max_length=200)
     created_at = models.DateTimeField(default=timezone.now, editable=False)

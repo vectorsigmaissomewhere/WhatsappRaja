@@ -1,22 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import UserGroup from '../UserDashboard/UserGroup';
 
 const AddGroup = () => {
-  const options = [
-    { label: "Marwadi", value: 1 },
-    { label: "Nepali", value: 2 },
-  ];
-
-  const category = [
-    { label: "Marwadi", value: 1 },
-    { label: "Nepali", value: 2 },
-  ];
+  const [groupName, setGroupName] = useState("");
+  const [language, setLanguage] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [tags, setTags] = useState("");
+  const [nsfw, setNsfw] = useState(false);
+  const [description, setDescription] = useState("");
+  const [qrCode, setQrCode] = useState(null);
+  const [joinLink, setJoinLink] = useState("");
 
   // Dropdown states and refs
   const [isOpen, setIsOpen] = useState(false);
   const catRef = useRef(null);
   const buttonRef = useRef(null);
-
+ 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   useEffect(() => {
@@ -60,32 +58,6 @@ const AddGroup = () => {
     };
   }, [profileRef, buttonProfileRef]);
 
-  // group button states and refs
-  const [isGroupButton, setIsGroupButton] = useState(false);
-  const groupRef = useRef(null);
-  const buttonGroupRef = useRef(null);
-
-  // Toggle the group button state
-  const toggleGroup = () => setIsGroupButton((prev) => !prev);
-
-  useEffect(() => {
-    const handleClickGroupOutside = (event) => {
-      if (
-        groupRef.current &&
-        !groupRef.current.contains(event.target) &&
-        buttonGroupRef.current &&
-        !buttonGroupRef.current.contains(event.target)
-      ) {
-        setIsGroupButton(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickGroupOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickGroupOutside);
-    };
-  }, [groupRef, buttonGroupRef]);
 
   return (
     <>
@@ -105,12 +77,9 @@ const AddGroup = () => {
           >
             Edit Password
           </button>
-          <button className='bg-cyan-500 px-4 py-2 text-lg rounded ml-4' onClick={toggleGroup} ref={buttonGroupRef}>
-            Your Group
-          </button>
         </div>
 
-        {isOpen && !isButtonOpen && !isGroupButton && (
+        {isOpen && !isButtonOpen &&(
           <div className="mx-4" ref={catRef}>
             <form>
               <div>
@@ -193,6 +162,28 @@ const AddGroup = () => {
                     style={{ height: '200px' }}
                   />
                 </div>
+                {/*WhatsApp Group Image */}
+                <div className="flex flex-col mx-4">
+                  <label htmlFor="fileInput" className="py-2 text-lg">
+                    WhatsApp Group Image
+                  </label>
+                  <input
+                    id="fileInput"
+                    type="file"
+                    className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                  />
+                </div>
+                {/* WhatsApp QR Code */}
+                <div className="flex flex-col mx-4">
+                  <label htmlFor="fileInput" className="py-2 text-lg">
+                    WhatsApp QR Code Image
+                  </label>
+                  <input
+                    id="fileInput"
+                    type="file"
+                    className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                  />
+                </div>
 
                 {/* WhatsApp QR Code */}
                 <div className="flex flex-col mx-4">
@@ -226,7 +217,7 @@ const AddGroup = () => {
           </div>
         )}
 
-        {isButtonOpen && !isOpen && !isGroupButton && (
+        {isButtonOpen && !isOpen && (
           <div ref={profileRef}>
             <form>
               <div>
@@ -259,12 +250,6 @@ const AddGroup = () => {
           </div>
         )}
       </div>
-
-      {/*showing all the user group that is added by the author */}
-      {isGroupButton && !isButtonOpen && !isOpen && (
-        <UserGroup isGroupButton={isGroupButton} />
-      )}
-
     </>
   );
 };
