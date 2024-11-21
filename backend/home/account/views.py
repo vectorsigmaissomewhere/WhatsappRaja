@@ -27,6 +27,11 @@ class StoreEmail:
         self.stored_emails.append(email)
         print(f"Stored email: {email}")
 
+    def get_last_email(self):
+        if self.stored_emails:
+            return self.stored_emails[-1] 
+        return None
+
 
 # Instance to store emails
 store_email_instance = StoreEmail()
@@ -54,6 +59,7 @@ class UserLoginView(APIView):
             user = authenticate(email=email, password=password)
             if user is not None:
                 token = get_token_for_user(user)
+                print(f"This is the stored email: {store_email_instance.get_last_email}")
                 print(user.email)
                 store_email_instance.store(email) 
                 return Response({'token':token, 'msg':'Login Success'}, status=status.HTTP_200_OK)
