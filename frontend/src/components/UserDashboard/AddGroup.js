@@ -1,20 +1,58 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+
 
 const AddGroup = () => {
   const [groupName, setGroupName] = useState("");
   const [language, setLanguage] = useState([]);
+  const [selectedLanguage, setSelectedLanguage] = useState("");
   const [category, setCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [tags, setTags] = useState("");
   const [nsfw, setNsfw] = useState(false);
   const [description, setDescription] = useState("");
   const [qrCode, setQrCode] = useState(null);
   const [joinLink, setJoinLink] = useState("");
 
+  // fetching all the category
+  const fetchCategoryData = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/categorylistapi');
+      setCategory(response.data);
+    } catch (err) {
+      console.log("Beta tune backend ka sever on kiya hai ki nahi");
+    }
+  };
+  useEffect(() => {
+    fetchCategoryData();
+  }, []);
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
+  // fetching all the language 
+  const fetchLanguageDate = async () =>{
+    try{
+      const response = await axios.get('http://127.0.0.1:8000/languagelistapi');
+      setLanguage(response.data);
+    }catch(err){
+      console.log("Beta tune backend ka sever on kiya hai ki nahi");
+    }
+  };
+  useEffect(() => {
+    fetchLanguageDate();
+  },[]);
+
+  const handleLanguageChange = (e) => {
+    setSelectedLanguage(e.target.value);
+  }
+
   // Dropdown states and refs
   const [isOpen, setIsOpen] = useState(false);
   const catRef = useRef(null);
   const buttonRef = useRef(null);
- 
+
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   useEffect(() => {
@@ -79,9 +117,9 @@ const AddGroup = () => {
           </button>
         </div>
 
-        {isOpen && !isButtonOpen &&(
+        {isOpen && !isButtonOpen && (
           <div className="mx-4" ref={catRef}>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div>
                 {/* Group Name */}
                 <div className="flex flex-col mx-4">
@@ -90,7 +128,7 @@ const AddGroup = () => {
                   </label>
                   <input
                     id="groupName"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" value={groupName} onChange={(e)=>setGroupName(e.target.value)} required 
                   />
                 </div>
 
@@ -102,10 +140,12 @@ const AddGroup = () => {
                   <select
                     id="language"
                     className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                    value={selectedLanguage}
+                    onChange={handleLanguageChange}
                   >
-                    {options.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
+                    {language.map((option, index) => (
+                      <option key={index} value={option.language} >
+                        {option.language}
                       </option>
                     ))}
                   </select>
@@ -119,10 +159,12 @@ const AddGroup = () => {
                   <select
                     id="category"
                     className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                    value={selectedCategory}
+                    onChange={handleCategoryChange}
                   >
-                    {category.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
+                    {category.map((option, index) => (
+                      <option key={index} value={option.category}>
+                        {option.category}
                       </option>
                     ))}
                   </select>
@@ -168,18 +210,7 @@ const AddGroup = () => {
                     WhatsApp Group Image
                   </label>
                   <input
-                    id="fileInput"
-                    type="file"
-                    className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                  />
-                </div>
-                {/* WhatsApp QR Code */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="fileInput" className="py-2 text-lg">
-                    WhatsApp QR Code Image
-                  </label>
-                  <input
-                    id="fileInput"
+                    id="groupImage"
                     type="file"
                     className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
                   />
@@ -191,7 +222,7 @@ const AddGroup = () => {
                     WhatsApp QR Code Image
                   </label>
                   <input
-                    id="fileInput"
+                    id="qrImage"
                     type="file"
                     className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
                   />

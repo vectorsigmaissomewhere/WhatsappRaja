@@ -30,3 +30,6 @@ class WGroupReviewSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.Serializer):
     category = serializers.CharField(max_length=50)
 
+class LanguageSerializer(serializers.Serializer):
+    language = serializers.CharField(max_length=50)
+

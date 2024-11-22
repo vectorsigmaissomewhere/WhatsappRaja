@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.mixins import ListModelMixin 
 from .serializers import CategorySerializer
+from .serializers import LanguageSerializer
 from rest_framework.renderers import JSONRenderer 
 from django.http import HttpResponse
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -19,6 +20,7 @@ class WGroupModelViewSet(viewsets.ViewSet):
     def list(self, request):
         group = Wgroup.objects.all()
         serializer = WGroupSerializer(group, many=True)
+        print(serializer.data)
         return Response(serializer.data)
     
     def retrieve(self, request, pk=None):
@@ -57,9 +59,19 @@ class WGroupModelViewSet(viewsets.ViewSet):
 
 class CategoryViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
-    queryset = Wgroup.objects.values('category').distinct()
-    print(queryset)
+    querysetlist = [{"category": v} for k, v in Wgroup.WHATSAPP_GROUP_CATEGORIES]
+    print(querysetlist)
+    def get_queryset(self):
+        return self.querysetlist
     serializer_class = CategorySerializer
+
+class LanguageViewSet(ReadOnlyModelViewSet):
+    permission_classes = [AllowAny]
+    querysetlist = [{"language": v} for k, v in Wgroup.LANGUAGE_CHOICES]
+    print(querysetlist)
+    def get_queryset(self):
+        return self.querysetlist
+    serializer_class = LanguageSerializer 
 
 class WGroupModelReviewViewSet(viewsets.ModelViewSet):
     queryset = WReview.objects.all()
