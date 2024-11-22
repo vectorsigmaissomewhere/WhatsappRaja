@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { decodeToken } from '../../Utils/authtoken';
 
 
 const AddGroup = () => {
@@ -11,8 +12,11 @@ const AddGroup = () => {
   const [tags, setTags] = useState("");
   const [nsfw, setNsfw] = useState(false);
   const [description, setDescription] = useState("");
+  const [groupImage, setGroupImage] = useState(null);
   const [qrCode, setQrCode] = useState(null);
   const [joinLink, setJoinLink] = useState("");
+  const token = localStorage.getItem('authToken');
+  const decodedToken = decodeToken(token);
 
   // fetching all the category
   const fetchCategoryData = async () => {
@@ -96,6 +100,35 @@ const AddGroup = () => {
     };
   }, [profileRef, buttonProfileRef]);
 
+  //adding group 
+  const handleGroupSubmit = (e) => {
+    e.preventDefault();
+    const groupDetail = {
+      user:decodedToken?.user_id,
+      groupName,
+      selectedLanguage,
+      selectedCategory, 
+      tags,
+      nsfw, 
+      description, 
+      groupImage,
+      qrCode, 
+      joinLink
+    }
+    axios.post('http://127.0.0.1:8000/wgroupapi/', groupDetail)
+    .then(response => {
+      setGroupName("");
+      setSelectedLanguage("");
+      setSelectedCategory("");
+      setTags("");
+      setNsfw("");
+      setDescription("");
+      setGroupImage(null);
+      setQrCode(null);
+      setJoinLink("");
+    })
+  }
+
 
   return (
     <>
@@ -119,7 +152,7 @@ const AddGroup = () => {
 
         {isOpen && !isButtonOpen && (
           <div className="mx-4" ref={catRef}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleGroupSubmit}>
               <div>
                 {/* Group Name */}
                 <div className="flex flex-col mx-4">
@@ -144,7 +177,7 @@ const AddGroup = () => {
                     onChange={handleLanguageChange}
                   >
                     {language.map((option, index) => (
-                      <option key={index} value={option.language} >
+                      <option key={index} value={language} onChange={(e)=>setSelectedLanguage(e.target.value)} required>
                         {option.language}
                       </option>
                     ))}
@@ -163,7 +196,7 @@ const AddGroup = () => {
                     onChange={handleCategoryChange}
                   >
                     {category.map((option, index) => (
-                      <option key={index} value={option.category}>
+                      <option key={index} value={category} onChange={(e)=>setCategory(e.target.value)} required>
                         {option.category}
                       </option>
                     ))}
@@ -177,7 +210,7 @@ const AddGroup = () => {
                   </label>
                   <input
                     id="tags"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" value={tags} onChange={(e)=>setTags(e.target.value)} required
                   />
                 </div>
 
@@ -186,7 +219,7 @@ const AddGroup = () => {
                   <input
                     type="checkbox"
                     id="nsfw"
-                    className="py-2"
+                    className="py-2" value={nsfw} onChange={(e)=>setNsfw(e.target.value)} required
                   />
                   <label htmlFor="nsfw" className="mx-2 py-2">
                     NSFW
@@ -201,7 +234,7 @@ const AddGroup = () => {
                   <textarea
                     id="description"
                     className="materialize-textarea shadow border rounded w-1/2 py-2 px-3 text-gray-700"
-                    style={{ height: '200px' }}
+                    style={{ height: '200px' }} value={description} onChange={(e)=>setDescription(e.target.value)} required
                   />
                 </div>
                 {/*WhatsApp Group Image */}
@@ -211,7 +244,7 @@ const AddGroup = () => {
                   </label>
                   <input
                     id="groupImage"
-                    type="file"
+                    type="file" value={groupImage} onChange={(e)=>setGroupImage(e.target.value)} required
                     className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
                   />
                 </div>
@@ -223,7 +256,7 @@ const AddGroup = () => {
                   </label>
                   <input
                     id="qrImage"
-                    type="file"
+                    type="file" value={qrCode} onChange={(e)=>setQrCode(e.target.value)} required
                     className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
                   />
                 </div>
@@ -234,7 +267,7 @@ const AddGroup = () => {
                     WhatsApp Join Link
                   </label>
                   <input
-                    id="joinLink"
+                    id="joinLink" value={joinLink} onChange={(e)=>setJoinLink(e.target.value)} required
                     className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
                   />
                 </div>
