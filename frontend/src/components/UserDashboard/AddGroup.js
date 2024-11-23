@@ -15,6 +15,7 @@ const AddGroup = () => {
   const [groupImage, setGroupImage] = useState(null);
   const [qrCode, setQrCode] = useState(null);
   const [joinLink, setJoinLink] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const token = localStorage.getItem('authToken');
   const decodedToken = decodeToken(token);
 
@@ -36,17 +37,17 @@ const AddGroup = () => {
   };
 
   // fetching all the language 
-  const fetchLanguageDate = async () =>{
-    try{
+  const fetchLanguageDate = async () => {
+    try {
       const response = await axios.get('http://127.0.0.1:8000/languagelistapi');
       setLanguage(response.data);
-    }catch(err){
+    } catch (err) {
       console.log("Beta tune backend ka sever on kiya hai ki nahi");
     }
   };
   useEffect(() => {
     fetchLanguageDate();
-  },[]);
+  }, []);
 
   const handleLanguageChange = (e) => {
     setSelectedLanguage(e.target.value);
@@ -101,34 +102,57 @@ const AddGroup = () => {
   }, [profileRef, buttonProfileRef]);
 
   //adding group 
-  const handleGroupSubmit = (e) => {
+  const handleGroupSubmit = async (e) => {
     e.preventDefault();
-    const groupDetail = {
-      user:decodedToken?.user_id,
-      groupName,
-      selectedLanguage,
-      selectedCategory, 
-      tags,
-      nsfw, 
-      description, 
-      groupImage,
-      qrCode, 
-      joinLink
-    }
-    axios.post('http://127.0.0.1:8000/wgroupapi/', groupDetail)
-    .then(response => {
+
+    const formData = new FormData();
+    formData.append("user", decodedToken.user_id);
+    formData.append("group_name", groupName);
+    formData.append("language", selectedLanguage);
+    formData.append("tags", tags);
+    formData.append("category", selectedCategory);
+    formData.append("nsfw", nsfw);
+    formData.append("description", description);
+    formData.append("group_image", groupImage);
+    formData.append("qr_code", qrCode);
+    formData.append("whatsapplink", joinLink);
+    formData.append("created_at", new Date().toISOString());
+    formData.append("updated_at", new Date().toISOString());
+    console.log("This is the data, that is been sent");
+    console.log(decodedToken?.user_id, groupName, selectedLanguage, selectedCategory, tags, nsfw, description, joinLink,new Date().toISOString());
+
+    const config = {
+      headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+  };
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/wgroupapi/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      // Reset form
       setGroupName("");
       setSelectedLanguage("");
       setSelectedCategory("");
       setTags("");
-      setNsfw("");
+      setNsfw(false);
       setDescription("");
       setGroupImage(null);
       setQrCode(null);
       setJoinLink("");
-    })
-  }
-
+      setSuccessMessage("Your data has been sent successfully!");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
+    } catch (error) {
+      console.error("Error submitting group details:", error);
+    }
+  };
 
   return (
     <>
@@ -153,6 +177,11 @@ const AddGroup = () => {
         {isOpen && !isButtonOpen && (
           <div className="mx-4" ref={catRef}>
             <form onSubmit={handleGroupSubmit}>
+              {successMessage && (
+                <div className="bg-green-500 text-white p-4 mt-4 rounded">
+                  {successMessage}
+                </div>
+              )}
               <div>
                 {/* Group Name */}
                 <div className="flex flex-col mx-4">
@@ -161,47 +190,35 @@ const AddGroup = () => {
                   </label>
                   <input
                     id="groupName"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" value={groupName} onChange={(e)=>setGroupName(e.target.value)} required 
+                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" value={groupName} onChange={(e) => setGroupName(e.target.value)} required
                   />
                 </div>
 
-                {/* Language */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="language" className="py-2 text-lg">
-                    Language
-                  </label>
-                  <select
-                    id="language"
-                    className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                    value={selectedLanguage}
-                    onChange={handleLanguageChange}
-                  >
-                    {language.map((option, index) => (
-                      <option key={index} value={language} onChange={(e)=>setSelectedLanguage(e.target.value)} required>
-                        {option.language}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <select
+                  id="language"
+                  className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)} // Handle change correctly
+                >
+                  {language.map((option, index) => (
+                    <option key={index} value={option.id}> {/* Use option.id or another unique value */}
+                      {option.language}
+                    </option>
+                  ))}
+                </select>
 
-                {/* Category */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="category" className="py-2 text-lg">
-                    Category Name
-                  </label>
-                  <select
-                    id="category"
-                    className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                  >
-                    {category.map((option, index) => (
-                      <option key={index} value={category} onChange={(e)=>setCategory(e.target.value)} required>
-                        {option.category}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <select
+                  id="category"
+                  className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  {category.map((option, index) => (
+                    <option key={index} value={option.id}>
+                      {option.category}
+                    </option>
+                  ))}
+                </select>
 
                 {/* Tags */}
                 <div className="flex flex-col mx-4">
@@ -210,7 +227,7 @@ const AddGroup = () => {
                   </label>
                   <input
                     id="tags"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" value={tags} onChange={(e)=>setTags(e.target.value)} required
+                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" value={tags} onChange={(e) => setTags(e.target.value)} required
                   />
                 </div>
 
@@ -219,7 +236,9 @@ const AddGroup = () => {
                   <input
                     type="checkbox"
                     id="nsfw"
-                    className="py-2" value={nsfw} onChange={(e)=>setNsfw(e.target.value)} required
+                    checked={nsfw} // Use checked instead of value
+                    onChange={(e) => setNsfw(e.target.checked)} // Update state with checked
+                    className="py-2"
                   />
                   <label htmlFor="nsfw" className="mx-2 py-2">
                     NSFW
@@ -234,32 +253,23 @@ const AddGroup = () => {
                   <textarea
                     id="description"
                     className="materialize-textarea shadow border rounded w-1/2 py-2 px-3 text-gray-700"
-                    style={{ height: '200px' }} value={description} onChange={(e)=>setDescription(e.target.value)} required
+                    style={{ height: '200px' }} value={description} onChange={(e) => setDescription(e.target.value)} required
                   />
                 </div>
-                {/*WhatsApp Group Image */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="fileInput" className="py-2 text-lg">
-                    WhatsApp Group Image
-                  </label>
-                  <input
-                    id="groupImage"
-                    type="file" value={groupImage} onChange={(e)=>setGroupImage(e.target.value)} required
-                    className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                  />
-                </div>
+                <input
+                  id="groupImage"
+                  type="file"
+                  onChange={(e) => setGroupImage(e.target.files[0])}
+                  className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                />
 
-                {/* WhatsApp QR Code */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="fileInput" className="py-2 text-lg">
-                    WhatsApp QR Code Image
-                  </label>
-                  <input
-                    id="qrImage"
-                    type="file" value={qrCode} onChange={(e)=>setQrCode(e.target.value)} required
-                    className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                  />
-                </div>
+                <input
+                  id="qrImage"
+                  type="file"
+                  onChange={(e) => setQrCode(e.target.files[0])}
+                  className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                />
+
 
                 {/* WhatsApp Join Link */}
                 <div className="flex flex-col mx-4">
@@ -267,17 +277,17 @@ const AddGroup = () => {
                     WhatsApp Join Link
                   </label>
                   <input
-                    id="joinLink" value={joinLink} onChange={(e)=>setJoinLink(e.target.value)} required
+                    id="joinLink" value={joinLink} onChange={(e) => setJoinLink(e.target.value)} required
                     className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
                   />
                 </div>
               </div>
+              <div className="mx-20 mt-4">
+                <button type="submit" className="bg-cyan-500 px-4 py-2 text-white rounded">
+                  Submit
+                </button>
+              </div>
             </form>
-            <div className="mx-20 mt-4">
-              <button type="submit" className="bg-cyan-500 px-4 py-2 text-white rounded">
-                Submit
-              </button>
-            </div>
           </div>
         )}
 

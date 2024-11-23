@@ -19,3 +19,4 @@ export function decodeToken(token){
         return null;
       }
 }
+

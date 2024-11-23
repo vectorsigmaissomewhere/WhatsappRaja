@@ -1,100 +1,187 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import { decodeToken } from '../../Utils/authtoken'; // You can get the user_id from decodedToken.user_id
 
 const Test = () => {
-  const [groups, setGroups] = useState([]);
-  const [error, setError] = useState('');
-  const authToken = localStorage.getItem('authToken');
+  const token = localStorage.getItem('authToken');
+  const decodedToken = decodeToken(token);
+  const [formData, setFormData] = useState({
+    group_name: "",
+    language: "",
+    category: "",
+    tags: "",
+    nsfw: false,
+    description: "",
+    group_image: null,
+    qr_code: null,
+    whatsapplink: "",
+  });
 
-  useEffect(() => {
-    if (!authToken) {
-      setError('Authentication token is missing.');
-      return;
-    }
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-    const fetchData = async () => {
-      try {
-        console.log('Auth Token:', authToken);
-        const response = await axios.get('http://127.0.0.1:8000/pgroupapi/', {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        setGroups(response.data);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Failed to fetch group data.');
-      }
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    const { name } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: e.target.files[0],
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    const token = localStorage.getItem("authToken"); // Assume token is stored in localStorage
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
     };
 
-    fetchData();
-  }, [authToken]);
+    const form = new FormData();
+    Object.keys(formData).forEach((key) => {
+      form.append(key, formData[key]);
+    });
+
+    // Append the user_id to the form data
+    form.append("user", decodedToken.user_id);
+
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/wgroupapi/", form, config);
+      setMessage(response.data.msg || "Group added successfully!");
+    } catch (error) {
+      setMessage(error.response?.data?.error || "Failed to add group.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-800 text-white pb-6 pt-6">
-      <h1 className="text-3xl font-bold mb-6">Your Groups</h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-11/12">
-        {groups.length > 0 ? (
-          groups.map((group, index) => (
-            <div
-              key={index}
-              className="bg-gray-700 rounded-lg shadow-lg p-6 flex flex-col space-y-4"
-            >
-              <div className="flex justify-between items-center">
-                <img
-                  src="https://via.placeholder.com/100"
-                  alt="Group"
-                  className="w-24 h-24 rounded-full object-cover"
-                />
-                <img
-                  src="https://via.placeholder.com/80"
-                  alt="QR Code"
-                  className="w-20 h-20 object-contain"
-                />
-              </div>
-              <h2 className="text-xl font-bold">{group.group_name}</h2>
-              <p>
-                <strong>Language:</strong> {group.language}
-              </p>
-              <p>
-                <strong>Category:</strong> {group.category}
-              </p>
-              <p>
-                <strong>Description:</strong> {group.description}
-              </p>
-              <p>
-                <strong>Tags:</strong> {group.tags}
-              </p>
-              <p>
-                <strong>WhatsApp Link:</strong>{' '}
-                <a
-                  href={group.whatsapplink}
-                  className="text-blue-400"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {group.whatsapplink}
-                </a>
-              </p>
-              <p>
-                <strong>Created At:</strong>{' '}
-                {new Date(group.created_at).toLocaleString()}
-              </p>
-              <div className='flex justify-end items end gap-8'>
-                <button className='bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded'>
-                  Edit
-                </button>
-                <button className='bg-red-500 hover:bg-red-600 text-white px-2 py-2 rounded'>
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="col-span-full text-center text-lg">No group data available.</p>
-        )}
-      </div>
+    <div className="max-w-lg mx-auto p-6 bg-white rounded shadow-md">
+      <h2 className="text-2xl font-bold mb-4">Add New Group</h2>
+      {message && <p className={`mb-4 ${message.includes("Failed") ? "text-red-600" : "text-green-600"}`}>{message}</p>}
+      <form onSubmit={handleSubmit}>
+        <label className="block mb-2">
+          Group Name:
+          <input
+            type="text"
+            name="group_name"
+            value={formData.group_name}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          />
+        </label>
+        <label className="block mb-2">
+          Language:
+          <select
+            name="language"
+            value={formData.language}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          >
+            <option value="">Select Language</option>
+            <option value="English">English</option>
+            <option value="Nepali">Nepali</option>
+            <option value="Hindi">Hindi</option>
+            {/* Add more languages as needed */}
+          </select>
+        </label>
+        <label className="block mb-2">
+          Category:
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          >
+            <option value="family_friends">Family and Friends</option>
+            <option value="coding_programming">Coding and Programming</option>
+            <option value="health_wellness">Health and Wellness</option>
+            {/* Add more categories as needed */}
+          </select>
+        </label>
+        <label className="block mb-2">
+          Tags (comma-separated):
+          <input
+            type="text"
+            name="tags"
+            value={formData.tags}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+        </label>
+        <label className="block mb-2">
+          NSFW:
+          <input
+            type="checkbox"
+            name="nsfw"
+            checked={formData.nsfw}
+            onChange={handleInputChange}
+            className="ml-2"
+          />
+        </label>
+        <label className="block mb-2">
+          Description:
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          />
+        </label>
+        <label className="block mb-2">
+          Group Image:
+          <input
+            type="file"
+            name="group_image"
+            onChange={handleFileChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+        </label>
+        <label className="block mb-2">
+          QR Code:
+          <input
+            type="file"
+            name="qr_code"
+            onChange={handleFileChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+        </label>
+        <label className="block mb-2">
+          WhatsApp Link:
+          <input
+            type="url"
+            name="whatsapplink"
+            value={formData.whatsapplink}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          />
+        </label>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Add Group"}
+        </button>
+      </form>
     </div>
   );
 };
