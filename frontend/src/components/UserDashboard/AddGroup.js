@@ -2,62 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { decodeToken } from '../../Utils/authtoken';
 
-
 const AddGroup = () => {
-  const [groupName, setGroupName] = useState("");
-  const [language, setLanguage] = useState([]);
-  const [selectedLanguage, setSelectedLanguage] = useState("");
-  const [category, setCategory] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [tags, setTags] = useState("");
-  const [nsfw, setNsfw] = useState(false);
-  const [description, setDescription] = useState("");
-  const [groupImage, setGroupImage] = useState(null);
-  const [qrCode, setQrCode] = useState(null);
-  const [joinLink, setJoinLink] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const token = localStorage.getItem('authToken');
-  const decodedToken = decodeToken(token);
-
-  // fetching all the category
-  const fetchCategoryData = async () => {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/categorylistapi');
-      setCategory(response.data);
-    } catch (err) {
-      console.log("Beta tune backend ka sever on kiya hai ki nahi");
-    }
-  };
-  useEffect(() => {
-    fetchCategoryData();
-  }, []);
-
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
-  };
-
-  // fetching all the language 
-  const fetchLanguageDate = async () => {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/languagelistapi');
-      setLanguage(response.data);
-    } catch (err) {
-      console.log("Beta tune backend ka sever on kiya hai ki nahi");
-    }
-  };
-  useEffect(() => {
-    fetchLanguageDate();
-  }, []);
-
-  const handleLanguageChange = (e) => {
-    setSelectedLanguage(e.target.value);
-  }
-
   // Dropdown states and refs
   const [isOpen, setIsOpen] = useState(false);
   const catRef = useRef(null);
   const buttonRef = useRef(null);
-
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   useEffect(() => {
@@ -81,7 +30,6 @@ const AddGroup = () => {
   const [isButtonOpen, setIsButtonOpen] = useState(false);
   const profileRef = useRef(null);
   const buttonProfileRef = useRef(null);
-
   const toggleProfile = () => setIsButtonOpen(!isButtonOpen);
 
   useEffect(() => {
@@ -101,56 +49,78 @@ const AddGroup = () => {
     };
   }, [profileRef, buttonProfileRef]);
 
-  //adding group 
+  // adding group 
+  const token = localStorage.getItem('authToken');
+  const decodedToken = decodeToken(token);
+  const [formData, setFormData] = useState({
+    group_name: "",
+    language: "",
+    category: "",
+    tags: "",
+    nsfw: false,
+    description: "",
+    group_image: null,
+    qr_code: null,
+    whatsapplink: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    const { name } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: e.target.files[0],
+    }));
+  };
+
   const handleGroupSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("user", decodedToken.user_id);
-    formData.append("group_name", groupName);
-    formData.append("language", selectedLanguage);
-    formData.append("tags", tags);
-    formData.append("category", selectedCategory);
-    formData.append("nsfw", nsfw);
-    formData.append("description", description);
-    formData.append("group_image", groupImage);
-    formData.append("qr_code", qrCode);
-    formData.append("whatsapplink", joinLink);
-    formData.append("created_at", new Date().toISOString());
-    formData.append("updated_at", new Date().toISOString());
-    console.log("This is the data, that is been sent");
-    console.log(decodedToken?.user_id, groupName, selectedLanguage, selectedCategory, tags, nsfw, description, joinLink,new Date().toISOString());
+    setLoading(true);
+    setMessage("");
 
     const config = {
       headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
       },
-  };
+    };
+
+    const form = new FormData();
+    Object.keys(formData).forEach((key) => {
+      form.append(key, formData[key]);
+    });
+
+    form.append("user", decodedToken.user_id);
+
     try {
-      const response = await axios.post('http://127.0.0.1:8000/wgroupapi/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-        },
+      const response = await axios.post("http://127.0.0.1:8000/wgroupapi/", form, config);
+      setMessage(response.data.msg || "Group added successfully!");
+      setFormData({
+        group_name: "",
+        language: "",
+        category: "",
+        tags: "",
+        nsfw: false,
+        description: "",
+        group_image: null,
+        qr_code: null,
+        whatsapplink: "",
       });
-      console.log(response.data);
-      // Reset form
-      setGroupName("");
-      setSelectedLanguage("");
-      setSelectedCategory("");
-      setTags("");
-      setNsfw(false);
-      setDescription("");
-      setGroupImage(null);
-      setQrCode(null);
-      setJoinLink("");
-      setSuccessMessage("Your data has been sent successfully!");
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 3000);
     } catch (error) {
-      console.error("Error submitting group details:", error);
+      setMessage(error.response?.data?.error || "Failed to add group.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -176,151 +146,122 @@ const AddGroup = () => {
 
         {isOpen && !isButtonOpen && (
           <div className="mx-4" ref={catRef}>
+            {message && <p className={`mb-4 ${message.includes("Failed") ? "text-red-600" : "text-green-600"}`}>{message}</p>}
             <form onSubmit={handleGroupSubmit}>
-              {successMessage && (
-                <div className="bg-green-500 text-white p-4 mt-4 rounded">
-                  {successMessage}
-                </div>
-              )}
-              <div>
-                {/* Group Name */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="groupName" className="py-2 text-lg">
-                    Add Group Name
-                  </label>
-                  <input
-                    id="groupName"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" value={groupName} onChange={(e) => setGroupName(e.target.value)} required
-                  />
-                </div>
-
-                <select
-                  id="language"
-                  className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                  value={selectedLanguage}
-                  onChange={(e) => setSelectedLanguage(e.target.value)} // Handle change correctly
-                >
-                  {language.map((option, index) => (
-                    <option key={index} value={option.id}> {/* Use option.id or another unique value */}
-                      {option.language}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  id="category"
-                  className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                  {category.map((option, index) => (
-                    <option key={index} value={option.id}>
-                      {option.category}
-                    </option>
-                  ))}
-                </select>
-
-                {/* Tags */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="tags" className="py-2 text-lg">
-                    Select 5 Tags
-                  </label>
-                  <input
-                    id="tags"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" value={tags} onChange={(e) => setTags(e.target.value)} required
-                  />
-                </div>
-
-                {/* NSFW */}
-                <div className="flex items-center mx-4">
-                  <input
-                    type="checkbox"
-                    id="nsfw"
-                    checked={nsfw} // Use checked instead of value
-                    onChange={(e) => setNsfw(e.target.checked)} // Update state with checked
-                    className="py-2"
-                  />
-                  <label htmlFor="nsfw" className="mx-2 py-2">
-                    NSFW
-                  </label>
-                </div>
-
-                {/* Group Description */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="description" className="py-2 text-lg">
-                    Group Description
-                  </label>
-                  <textarea
-                    id="description"
-                    className="materialize-textarea shadow border rounded w-1/2 py-2 px-3 text-gray-700"
-                    style={{ height: '200px' }} value={description} onChange={(e) => setDescription(e.target.value)} required
-                  />
-                </div>
+              {/* Group Name */}
+              <div className="flex flex-col mx-4">
+                <label htmlFor="groupName" className="py-2 text-lg">Add Group Name</label>
                 <input
-                  id="groupImage"
-                  type="file"
-                  onChange={(e) => setGroupImage(e.target.files[0])}
-                  className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                  type="text"
+                  name="group_name"
+                  value={formData.group_name}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700" required
                 />
-
-                <input
-                  id="qrImage"
-                  type="file"
-                  onChange={(e) => setQrCode(e.target.files[0])}
-                  className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                />
-
-
-                {/* WhatsApp Join Link */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="joinLink" className="py-2 text-lg">
-                    WhatsApp Join Link
-                  </label>
-                  <input
-                    id="joinLink" value={joinLink} onChange={(e) => setJoinLink(e.target.value)} required
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                  />
-                </div>
               </div>
-              <div className="mx-20 mt-4">
-                <button type="submit" className="bg-cyan-500 px-4 py-2 text-white rounded">
-                  Submit
+
+              {/* Language */}
+              <select
+                name="language"
+                value={formData.language}
+                onChange={handleInputChange}
+                className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                required
+              >
+                <option value="English">English</option>
+                <option value="Nepali">Nepali</option>
+              </select>
+
+              {/* Category */}
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                required
+              >
+                <option value="family_friends">Family and Friends</option>
+                <option value="coding_programming">Coding and Programming</option>
+                <option value="health_wellness">Health and Wellness</option>
+              </select>
+
+              {/* Tags */}
+              <div className="flex flex-col mx-4">
+                <label htmlFor="tags" className="py-2 text-lg">Select 5 Tags</label>
+                <input
+                  type="text"
+                  name="tags"
+                  value={formData.tags}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                />
+              </div>
+
+              {/* NSFW Checkbox */}
+              <label className="flex items-center mb-4">
+                <input
+                  type="checkbox"
+                  name="nsfw"
+                  checked={formData.nsfw}
+                  onChange={handleInputChange}
+                  className="mr-2"
+                />
+                NSFW
+              </label>
+
+              {/* Description */}
+              <div className="flex flex-col mx-4">
+                <label htmlFor="description" className="py-2 text-lg">Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                />
+              </div>
+
+              {/* File Uploads */}
+              <div className="flex flex-col mx-4">
+                <label htmlFor="group_image" className="py-2 text-lg">Group Image</label>
+                <input
+                  type="file"
+                  name="group_image"
+                  onChange={handleFileChange}
+                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                />
+              </div>
+
+              <div className="flex flex-col mx-4">
+                <label htmlFor="qr_code" className="py-2 text-lg">QR Code</label>
+                <input
+                  type="file"
+                  name="qr_code"
+                  onChange={handleFileChange}
+                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                />
+              </div>
+
+              <div className="flex flex-col mx-4">
+                <label htmlFor="whatsapplink" className="py-2 text-lg">WhatsApp Link</label>
+                <input
+                  type="text"
+                  name="whatsapplink"
+                  value={formData.whatsapplink}
+                  onChange={handleInputChange}
+                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                />
+              </div>
+
+              <div className="py-2">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                  disabled={loading}
+                >
+                  {loading ? "Adding..." : "Add Group"}
                 </button>
               </div>
             </form>
-          </div>
-        )}
-
-        {isButtonOpen && !isOpen && (
-          <div ref={profileRef}>
-            <form>
-              <div>
-                {/* Group Name */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="groupName" className="py-2 text-lg">
-                    Enter New Password
-                  </label>
-                  <input
-                    id="newPassword"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                  />
-                </div>
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="re-newPassword" className="py-2 text-lg">
-                    Retype New Password
-                  </label>
-                  <input
-                    id="groupName"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                  />
-                </div>
-              </div>
-            </form>
-            <div className="mx-20 mt-4">
-              <button type="submit" className="bg-cyan-500 px-4 py-2 text-white rounded">
-                Submit
-              </button>
-            </div>
           </div>
         )}
       </div>

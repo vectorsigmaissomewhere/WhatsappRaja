@@ -1,3 +1,4 @@
+/* you can use this code on how we can add group*/
 import React, { useState } from "react";
 import axios from "axios";
 import { decodeToken } from '../../Utils/authtoken'; // You can get the user_id from decodedToken.user_id
