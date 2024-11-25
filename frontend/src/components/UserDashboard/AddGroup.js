@@ -161,29 +161,35 @@ const AddGroup = () => {
               </div>
 
               {/* Language */}
+              <div className='flex flex-col'>
+              <label htmlFor="description" className="py-2 text-lg mx-4">Select Language</label>
               <select
                 name="language"
                 value={formData.language}
                 onChange={handleInputChange}
-                className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700 my-2 mx-4"
                 required
               >
                 <option value="English">English</option>
                 <option value="Nepali">Nepali</option>
               </select>
+              </div>
 
               {/* Category */}
+              <div className='flex flex-col'>
+              <label htmlFor="description" className="py-2 text-lg mx-4">Select Category</label>
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                className="form-select shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700 my-2 mx-4"
                 required
               >
                 <option value="family_friends">Family and Friends</option>
                 <option value="coding_programming">Coding and Programming</option>
                 <option value="health_wellness">Health and Wellness</option>
               </select>
+              </div>
 
               {/* Tags */}
               <div className="flex flex-col mx-4">
@@ -198,7 +204,7 @@ const AddGroup = () => {
               </div>
 
               {/* NSFW Checkbox */}
-              <label className="flex items-center mb-4">
+              <label className="flex items-center mt-2 mb-2 mx-4 ">
                 <input
                   type="checkbox"
                   name="nsfw"
@@ -227,7 +233,7 @@ const AddGroup = () => {
                   type="file"
                   name="group_image"
                   onChange={handleFileChange}
-                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                  className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
                 />
               </div>
 
@@ -237,7 +243,7 @@ const AddGroup = () => {
                   type="file"
                   name="qr_code"
                   onChange={handleFileChange}
-                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                  className="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
                 />
               </div>
 
@@ -252,7 +258,7 @@ const AddGroup = () => {
                 />
               </div>
 
-              <div className="py-2">
+              <div className="py-2 mx-20 mt-4">
                 <button
                   type="submit"
                   className="bg-blue-500 text-white py-2 px-4 rounded"
@@ -262,6 +268,38 @@ const AddGroup = () => {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+        {isButtonOpen && !isOpen && (
+          <div ref={profileRef}>
+            <form>
+              <div>
+                {/* Group Name */}
+                <div className="flex flex-col mx-4">
+                  <label htmlFor="groupName" className="py-2 text-lg">
+                    Enter New Password
+                  </label>
+                  <input
+                    id="newPassword"
+                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                  />
+                </div>
+                <div className="flex flex-col mx-4">
+                  <label htmlFor="re-newPassword" className="py-2 text-lg">
+                    Retype New Password
+                  </label>
+                  <input
+                    id="groupName"
+                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                  />
+                </div>
+              </div>
+            </form>
+            <div className="mx-20 mt-4">
+              <button type="submit" className="bg-cyan-500 px-4 py-2 text-white rounded">
+                Submit
+              </button>
+            </div>
           </div>
         )}
       </div>
