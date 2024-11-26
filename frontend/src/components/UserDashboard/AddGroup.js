@@ -104,6 +104,10 @@ const AddGroup = () => {
     form.append("user", decodedToken.user_id);
 
     try {
+      console.log(token);
+      form.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+      });
       const response = await axios.post("http://127.0.0.1:8000/wgroupapi/", form, config);
       setMessage(response.data.msg || "Group added successfully!");
       setFormData({

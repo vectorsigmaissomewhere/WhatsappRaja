@@ -25,6 +25,13 @@ class PGroupModelViewSet(viewsets.ViewSet):
         serializer = PGroupSerializer(group, many=True)
         print(stored_email)
         return Response(serializer.data)
+    
+    def destroy(self, request, pk):
+        id = pk 
+        groupobject = Wgroup.objects.get(group_id=id)
+        groupobject.delete()
+        return Response({'msg': 'Group Delete Successfully'})
+
 
 """
 class PGroupModelViewSet(RetrieveUpdateDestroyAPIView):

@@ -3,11 +3,13 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model 
 from account.models import User 
 from django.utils import timezone
+import uuid 
 
 # Whatsapp Group 
 class Wgroup(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    group_name = models.CharField(max_length=70)
+    group_id = models.CharField(max_length=32, unique=True, default=uuid.uuid4().hex,primary_key=True)
+    group_name = models.CharField(max_length=70) 
     LANGUAGE_CHOICES = [
         ('Akan', 'Akan'),
         ('Albanian', 'Albanian'),
@@ -180,8 +182,9 @@ class Wgroup(models.Model):
 
 
 class WReview(models.Model):
-    wgroup = models.ForeignKey(Wgroup, on_delete=models.CASCADE, related_name='reviews')
+    wgroup = models.ForeignKey(Wgroup, on_delete=models.CASCADE, to_field='group_id',)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review_id = models.CharField(max_length=32, unique=True, default=uuid.uuid4().hex,primary_key=True)
     rating = models.IntegerField()
     comment_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

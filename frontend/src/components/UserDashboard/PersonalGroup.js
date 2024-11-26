@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 const PersonalGroup = () => {
   const [groups, setGroups] = useState([]);
   const [error, setError] = useState('');
   const authToken = localStorage.getItem('authToken');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!authToken) {
@@ -30,6 +33,21 @@ const PersonalGroup = () => {
     fetchData();
   }, [authToken]);
 
+  // handling deletion ------------
+  const handleGroupDelete = async(id) =>{
+    if(!window.confirm("Are you sure you want to delete the group")){
+      return;
+    }
+    try{
+      await axios.delete(`http://127.0.0.1:8000/pgroupapi/${id}/`);
+      navigate('/dashboard');
+      alert('Group delete successfully');
+    }
+    catch(error){
+      alert('Failed to delete the Group');
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-800 text-white pb-6 pt-6">
       <h1 className="text-3xl font-bold mb-6">Your Groups</h1>
@@ -53,6 +71,9 @@ const PersonalGroup = () => {
                   className="w-20 h-20 object-contain"
                 />
               </div>
+              <p>
+                <strong>GroupId</strong> {group.group_id}
+              </p>
               <h2 className="text-xl font-bold">{group.group_name}</h2>
               <p>
                 <strong>Language:</strong> {group.language}
@@ -85,7 +106,7 @@ const PersonalGroup = () => {
                 <button className='bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded'>
                   Edit
                 </button>
-                <button className='bg-red-500 hover:bg-red-600 text-white px-2 py-2 rounded'>
+                <button className='bg-red-500 hover:bg-red-600 text-white px-2 py-2 rounded' onClick={()=>handleGroupDelete(group.group_id)}>
                   Delete
                 </button>
               </div>
