@@ -8,6 +8,7 @@ from .serializers import PGroupSerializer
 from account.views import store_email_instance 
 from account.models import User
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from django.shortcuts import get_object_or_404
 
 
 # It is checking for email and I am sending user id
@@ -26,11 +27,19 @@ class PGroupModelViewSet(viewsets.ViewSet):
         print(stored_email)
         return Response(serializer.data)
     
-    def destroy(self, request, pk):
-        id = pk 
-        groupobject = Wgroup.objects.get(group_id=id)
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users access
+
+    def destroy(self, request, pk=None):
+        # Get the group by primary key (group_id)
+        groupobject = get_object_or_404(Wgroup, group_id=pk)
+        
+        # Check if the logged-in user is the owner of the group
+        if groupobject.user != request.user:
+            return Response({'error': 'You do not have permission to delete this group.'}, status=status.HTTP_403_FORBIDDEN)
+
         groupobject.delete()
-        return Response({'msg': 'Group Delete Successfully'})
+        return Response({'msg': 'Group deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
 
 
 """

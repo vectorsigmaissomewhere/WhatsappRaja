@@ -8,6 +8,7 @@ const PersonalGroup = () => {
   const [error, setError] = useState('');
   const authToken = localStorage.getItem('authToken');
   const navigate = useNavigate();
+  const token = localStorage.getItem('authToken');
 
   useEffect(() => {
     if (!authToken) {
@@ -39,7 +40,11 @@ const PersonalGroup = () => {
       return;
     }
     try{
-      await axios.delete(`http://127.0.0.1:8000/pgroupapi/${id}/`);
+      await axios.delete(`http://127.0.0.1:8000/pgroupapi/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       navigate('/dashboard');
       alert('Group delete successfully');
     }
