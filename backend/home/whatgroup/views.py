@@ -24,8 +24,9 @@ class WGroupModelViewSet(viewsets.ViewSet):
         return Response(serializer.data)
     
     def retrieve(self, request, pk=None):
+        permission_classes = [AllowAny]
         id = pk 
-        group = Wgroup.objects.get(id=id)
+        group = Wgroup.objects.get(group_id=id)
         serializer = WGroupSerializer(group)
         return Response(serializer.data)
     

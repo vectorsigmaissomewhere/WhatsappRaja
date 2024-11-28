@@ -8,7 +8,7 @@ import uuid
 # Whatsapp Group 
 class Wgroup(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    group_id = models.CharField(max_length=32, unique=True, default=uuid.uuid4().hex,primary_key=True)
+    group_id = models.BigAutoField(primary_key=True)
     group_name = models.CharField(max_length=70) 
     LANGUAGE_CHOICES = [
         ('Akan', 'Akan'),

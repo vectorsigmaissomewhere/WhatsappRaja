@@ -39,6 +39,7 @@ store_email_instance = StoreEmail()
 
 class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer] # will show the error that your have provided
+    permission_classes = [AllowAny]
     def post(self, request, format=None):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
