@@ -1,6 +1,5 @@
 import React from 'react'
 import { FaUsers } from 'react-icons/fa';
-import { FaSearch } from 'react-icons/fa';
 import Switch from '@mui/material/Switch';
 
 const SearchedTag = () => {
