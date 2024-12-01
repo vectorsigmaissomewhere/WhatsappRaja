@@ -9,6 +9,7 @@ import Login from './components/Auth/Login'
 import Register from './components/Auth/Register'
 import ResetPasswordMail from './components/Auth/ResetPasswordMail'
 import AppendReview from './components/AppendReview/AppendReview'
+import GroupDetail from './components/GroupDetail/GroupDetail'
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
       <Route path='/register' element={<Register />}/>
       <Route path='/resetpassmail' element={<ResetPasswordMail />}/>
       <Route path='/addreview' element={<AppendReview />}/>
+      <Route path='/groupdetail' element={<GroupDetail />} />
     </Routes>
   </Router>
   )

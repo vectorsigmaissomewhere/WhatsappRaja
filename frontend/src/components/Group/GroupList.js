@@ -6,7 +6,6 @@ import serverpic from '../../images/lanadelrey.jpg';
 const GroupList = () => {
   const [groupList, setGroupList] = useState([]);
   const [error, setError] = useState('');
-  const token = localStorage.getItem('authToken');
 
   // this function will change the tags that is in comma format into a list 
   const taglist = (tags) => {
@@ -15,17 +14,9 @@ const GroupList = () => {
 
 
   useEffect(() => {
-    if (!token) {
-      setError('Authentication token is missing.');
-      return;
-    }
-
     const fetchData = async () => {
       try {
-        console.log('Auth Token:', token);
-        const response = await axios.get('http://127.0.0.1:8000/wgroupapi/', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get('http://127.0.0.1:8000/wgroupapi/');
         setGroupList(response.data);
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -34,7 +25,7 @@ const GroupList = () => {
     };
 
     fetchData();
-  }, [token]);
+  }, []);
 
   if (error) {
     return <p className="text-red-500 text-center">{error}</p>;

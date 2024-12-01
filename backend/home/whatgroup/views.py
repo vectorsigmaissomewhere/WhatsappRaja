@@ -17,8 +17,8 @@ from rest_framework.permissions import AllowAny
 
 # This viewset is for public like everyone can retrieve data, list data, create data 
 class WGroupModelViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
     def list(self, request):
-        permission_classes = [AllowAny]
         group = Wgroup.objects.all()
         serializer = WGroupSerializer(group, many=True)
         print(serializer.data)
