@@ -5,20 +5,21 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from account.renderers import UserRenderer
 from rest_framework import status
+from whatgroup.serializers import WGroupReviewSerializer
 # Create your views here.
 
 class WReviewModelViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
     def list(self, request):
         review = WReview.objects.all()
-        serializer = WReviewSerializer(review, many=True)
+        serializer = WGroupReviewSerializer(review, many=True)
         print(serializer.data)
         return Response(serializer.data)
     
     def create(self, request):
         renderer_classes = [UserRenderer]
         permission_classes = [IsAuthenticated]
-        serializer = WReviewSerializer(data = request.data)
+        serializer = WGroupReviewSerializer(data = request.data)
         if serializer.is_valid():
             try:
                 serializer.save()

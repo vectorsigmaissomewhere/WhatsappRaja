@@ -184,7 +184,7 @@ class Wgroup(models.Model):
 class WReview(models.Model):
     wgroup = models.ForeignKey(Wgroup, on_delete=models.CASCADE, to_field='group_id',)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    review_id = models.CharField(max_length=32, unique=True, default=uuid.uuid4().hex,primary_key=True)
+    review_id = models.BigAutoField(primary_key=True)
     rating = models.IntegerField()
     comment_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

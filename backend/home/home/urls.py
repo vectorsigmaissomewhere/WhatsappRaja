@@ -28,6 +28,8 @@ categoryrouter.register('categorylistapi', CategoryViewSet, basename='categoryli
 languagerouter = DefaultRouter()
 languagerouter.register('languagelistapi', LanguageViewSet, basename='languagelistapi')
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/', include('account.urls')),

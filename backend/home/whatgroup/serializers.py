@@ -19,7 +19,7 @@ class WGroupSerializer(serializers.ModelSerializer):
 class WGroupReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = WReview
-        fields = ['user', 'wgroup','rating','comment_text','created_at']
+        fields = ['user', 'wgroup','review_id','rating','comment_text','created_at']
     
     # Custom validation for rating value
     def validate_rating(self, value):

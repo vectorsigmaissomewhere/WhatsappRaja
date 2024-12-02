@@ -1,0 +1,1 @@
+# The serializers for review is in whatgroup serializers.py
