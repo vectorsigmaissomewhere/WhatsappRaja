@@ -3,7 +3,8 @@ import { FaStar } from 'react-icons/fa';
 
 const GroupReview = () => {
   return (
-    <div className='flex flex-col justify-center items-center mt-4 mb-4'>
+    <div className='bg-indigo-400 py-10 text-white'>
+    <div className='flex flex-col justify-center items-center'>
       <div className='text-3xl font-bold font-sans'>
         <h2>Ratings & Reviews</h2>
       </div>
@@ -20,6 +21,7 @@ const GroupReview = () => {
         </div>
         <div className='flex justify-center items-center text-3xl'>3 reviews</div>
       </div>
+    </div>
     </div>
   )
 }

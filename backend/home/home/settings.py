@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'account',
     'whatgroup',
     'privategroup',
+    'review',
     'rest_framework',
     'corsheaders'
 ]

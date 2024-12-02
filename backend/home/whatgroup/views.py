@@ -59,6 +59,7 @@ class WGroupModelViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     """
 
+
 class CategoryViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     querysetlist = [{"category": v} for k, v in Wgroup.WHATSAPP_GROUP_CATEGORIES]
