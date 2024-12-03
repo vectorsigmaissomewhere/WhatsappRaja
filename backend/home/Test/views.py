@@ -12,6 +12,10 @@ from rest_framework import generics, permissions
 from rest_framework.exceptions import PermissionDenied
 from .serializers import TestSerializer
 
+# testing for reviews 
+from rest_framework.response import Response 
+from whatgroup.models import WReview, Wgroup
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Custom permission to only allow owners of a blog to edit or delete it.
@@ -41,3 +45,8 @@ class TestDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.user != instance.owner:
             raise PermissionDenied("You do not have permission to delete this blog.")
         instance.delete()
+
+def getallreviews(request):
+    allreview = WReview.objects.filter(wgroup__id=1)
+    print(allreview)
+    return response("check it")
