@@ -14,6 +14,7 @@ class WReviewModelViewSet(viewsets.ViewSet):
         review = WReview.objects.all()
         serializer = WGroupReviewSerializer(review, many=True)
         print(serializer.data)
+        print(allreview)
         return Response(serializer.data)
     
     def create(self, request):
@@ -33,8 +34,7 @@ class WReviewModelViewSet(viewsets.ViewSet):
     def retrieve(self,request, pk=None):
         permission_classes = [AllowAny]
         id = pk 
-        allreview = WReview.objects.filter(wgroup__id=id)
+        allreview = WReview.objects.filter(wgroup=2)
         print(f"Trying to get all the reviews {allreview}")
         serializer = WGroupReviewSerializer(allreview, many=True)
         return Response(serializer.data)
-

@@ -6,6 +6,7 @@ from Test.views import TestDetailView
 from rest_framework.routers import DefaultRouter
 from whatgroup.views import CategoryViewSet
 from whatgroup.views import LanguageViewSet
+from review.views import WReviewModelViewSet
 
 # for testing purposes 
 from Test.views import getallreviews
@@ -31,6 +32,9 @@ categoryrouter.register('categorylistapi', CategoryViewSet, basename='categoryli
 languagerouter = DefaultRouter()
 languagerouter.register('languagelistapi', LanguageViewSet, basename='languagelistapi')
 
+# creating couter for review 
+reviewlistrouter = DefaultRouter()
+reviewlistrouter.register('reviewdetailapi', WReviewModelViewSet, basename='reviewdetailapi')
 
 
 urlpatterns = [
@@ -41,6 +45,7 @@ urlpatterns = [
     path('', include(privategrouprouter.urls)),
     path('', include(categoryrouter.urls)),
     path('', include(languagerouter.urls)),
+    path('', include(reviewlistrouter.urls)),
     # Test url 
     path('testgroupapi/<int:pk>/', TestDetailView.as_view(), name='testgroup-detail'),
     path('getit/', getallreviews, name='getit'),
