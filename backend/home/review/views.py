@@ -58,4 +58,4 @@ def averagereviewget(request, pk):
         print(len(allreview))
         print(f"average review is {round(totalsum/totalreview)}")
         averagereview = round(totalsum/totalreview)
-        return Response({"average_rating": averagereview, "total_reviews": totalsum})
+        return Response({"average_rating": averagereview, "total_reviews": totalreview})
