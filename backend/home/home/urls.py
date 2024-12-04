@@ -7,6 +7,7 @@ from rest_framework.routers import DefaultRouter
 from whatgroup.views import CategoryViewSet
 from whatgroup.views import LanguageViewSet
 from review.views import WReviewModelViewSet
+from review.views import averagereviewget
 
 # for testing purposes 
 from Test.views import getallreviews
@@ -49,4 +50,5 @@ urlpatterns = [
     # Test url 
     path('testgroupapi/<int:pk>/', TestDetailView.as_view(), name='testgroup-detail'),
     path('getit/', getallreviews, name='getit'),
+    path('checkreview/<int:pk>/', averagereviewget, name='checkreview'),
 ]

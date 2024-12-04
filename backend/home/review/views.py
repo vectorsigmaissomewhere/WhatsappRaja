@@ -7,6 +7,10 @@ from rest_framework.permissions import IsAuthenticated
 from account.renderers import UserRenderer
 from rest_framework import status
 from whatgroup.serializers import WGroupReviewSerializer
+from rest_framework.decorators import api_view, permission_classes
+from django.db.models import Sum
+import json
+
 # Create your views here.
 
 class WReviewModelViewSet(viewsets.ViewSet):
@@ -41,3 +45,17 @@ class WReviewModelViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
+# calculating the average review of a group 
+@api_view(['GET'])
+@permission_classes([AllowAny]) 
+def averagereviewget(request, pk):
+    if request.method == 'GET':
+        id = pk 
+        allreview = WReview.objects.filter(wgroup=2)
+        totalsum = allreview.aggregate(total_rating=Sum('rating'))['total_rating']
+        totalreview = len(allreview)
+        print(totalsum)
+        print(len(allreview))
+        print(f"average review is {round(totalsum/totalreview)}")
+        averagereview = round(totalsum/totalreview)
+        return Response({"average_rating": averagereview, "total_reviews": totalsum})
