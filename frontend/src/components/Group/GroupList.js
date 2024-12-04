@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
 import serverpic from '../../images/lanadelrey.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const GroupList = () => {
   const [groupList, setGroupList] = useState([]);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   // this function will change the tags that is in comma format into a list 
   const taglist = (tags) => {
@@ -31,10 +33,14 @@ const GroupList = () => {
     return <p className="text-red-500 text-center">{error}</p>;
   }
 
+  const handleGroupClick = (group_id) => {
+    navigate(`/groupdetail/${group_id}`);
+  }
+
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-slate-600">
       {groupList.map((group, index) => (
-        <div key={index} className="bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4">
+        <div key={index} className="bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4" onClick={()=>handleGroupClick(group.group_id)}>
           <div className="flex flex-row justify-items-end">
             <FaStar />
             <FaStar />

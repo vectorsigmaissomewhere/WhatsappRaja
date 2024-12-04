@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from whatgroup.models import WReview, Wgroup 
 from rest_framework import viewsets 
 from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from account.renderers import UserRenderer
 from rest_framework import status
 from whatgroup.serializers import WGroupReviewSerializer
@@ -38,3 +39,5 @@ class WReviewModelViewSet(viewsets.ViewSet):
         print(f"Trying to get all the reviews {allreview}")
         serializer = WGroupReviewSerializer(allreview, many=True)
         return Response(serializer.data)
+
+

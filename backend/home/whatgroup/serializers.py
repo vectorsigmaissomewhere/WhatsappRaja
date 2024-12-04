@@ -4,7 +4,7 @@ from .models import Wgroup, WReview
 class WGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wgroup
-        fields = ['user', 'group_name', 'language', 'category', 'tags', 'nsfw', 'description','group_image', 'qr_code', 'whatsapplink', 'created_at', 'updated_at']
+        fields = ['user', 'group_id','group_name', 'language', 'category', 'tags', 'nsfw', 'description','group_image', 'qr_code', 'whatsapplink', 'created_at', 'updated_at']
     
     # Custom validation for tags field
     def validate_tags(self, value):

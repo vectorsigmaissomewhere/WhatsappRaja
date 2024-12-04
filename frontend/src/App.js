@@ -26,7 +26,7 @@ const App = () => {
       <Route path='/register' element={<Register />}/>
       <Route path='/resetpassmail' element={<ResetPasswordMail />}/>
       <Route path='/addreview' element={<AppendReview />}/>
-      <Route path='/groupdetail' element={<GroupDetail />} />
+      <Route path="/groupdetail/:group_id" element={<GroupDetail />} />
     </Routes>
   </Router>
   )
