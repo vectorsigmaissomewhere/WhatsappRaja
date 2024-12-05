@@ -39,7 +39,7 @@ class WReviewModelViewSet(viewsets.ViewSet):
     def retrieve(self,request, pk=None):
         permission_classes = [AllowAny]
         id = pk 
-        allreview = WReview.objects.filter(wgroup=2)
+        allreview = WReview.objects.filter(wgroup=id)
         print(f"Trying to get all the reviews {allreview}")
         serializer = WGroupReviewSerializer(allreview, many=True)
         return Response(serializer.data)
@@ -51,7 +51,7 @@ class WReviewModelViewSet(viewsets.ViewSet):
 def averagereviewget(request, pk):
     if request.method == 'GET':
         id = pk 
-        allreview = WReview.objects.filter(wgroup=2)
+        allreview = WReview.objects.filter(wgroup=id)
         totalsum = allreview.aggregate(total_rating=Sum('rating'))['total_rating']
         totalreview = len(allreview)
         print(totalsum)
