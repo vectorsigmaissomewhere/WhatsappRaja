@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'privategroup',
     'review',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'django_elasticsearch_dsl',
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,14 @@ TEMPLATES = [
         },
     },
 ]
+
+# Elastic search 
+
+ELASTICSEARCH_DSL = {
+    'default':{
+        'hosts':'http://localhost:9200'
+    }
+}
 
 # Correct the WSGI_APPLICATION to point to the 'home' app
 WSGI_APPLICATION = 'home.wsgi.application'
