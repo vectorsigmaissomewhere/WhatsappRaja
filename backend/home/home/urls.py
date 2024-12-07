@@ -8,6 +8,7 @@ from whatgroup.views import CategoryViewSet
 from whatgroup.views import LanguageViewSet
 from review.views import WReviewModelViewSet
 from review.views import averagereviewget
+from search.views import GroupSearchAPI
 
 # for testing purposes 
 from Test.views import getallreviews
@@ -33,10 +34,13 @@ categoryrouter.register('categorylistapi', CategoryViewSet, basename='categoryli
 languagerouter = DefaultRouter()
 languagerouter.register('languagelistapi', LanguageViewSet, basename='languagelistapi')
 
-# creating couter for review 
+# creating router for review 
 reviewlistrouter = DefaultRouter()
 reviewlistrouter.register('reviewdetailapi', WReviewModelViewSet, basename='reviewdetailapi')
 
+# creating router for search 
+groupsearchrouter = DefaultRouter() 
+groupsearchrouter.register('search', GroupSearchAPI, basename='search')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -51,4 +55,5 @@ urlpatterns = [
     path('testgroupapi/<int:pk>/', TestDetailView.as_view(), name='testgroup-detail'),
     path('getit/', getallreviews, name='getit'),
     path('checkreview/<int:pk>/', averagereviewget, name='checkreview'),
+    path('search/', GroupSearchAPI.as_view(), name='search'),
 ]
