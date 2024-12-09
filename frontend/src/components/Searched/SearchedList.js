@@ -1,177 +1,118 @@
-import React from 'react'
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import serverpic from '../../images/lanadelrey.jpg';
 
 const SearchedList = () => {
-  return (
-    <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-slate-600'>
-        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-[200px] rounded-lg p-4'>
-          <div className='flex flex-row justify-items-end items-end'>
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <p>(14 reviews)</p>
-          </div>
-          <div className='flex flex-row mt-4'>
-            <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-            <div>
-              <h2>Ecom warriors</h2>
-              <button>9891 user</button>
-              <button>category name</button>
-            </div>
-          </div>
+    const location = useLocation();
+    const results = location.state?.results || []; // Default to an empty array if no results
+
+    return (
+        <div className="p-6 bg-slate-800 min-h-screen">
+            {results.length === 0 ? (
+                <p className="text-white text-2xl text-center mt-10">No results found</p> // Display a message if no results
+            ) : (
+                <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {results.map((result, index) => (
+                        <div
+                            key={index}
+                            className="bg-gray-900 text-white rounded-lg shadow-lg p-6 space-y-4 transform hover:scale-105 transition-transform duration-300"
+                        >
+                            {/* Rating Section */}
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    {[...Array(result.rating || 0)].map((_, i) => (
+                                        <FaStar key={i} className="text-yellow-400" />
+                                    ))}
+                                </div>
+                                <p className="text-sm text-gray-400">({result.reviews || 0} reviews)</p>
+                            </div>
+
+                            {/* Main Details */}
+                            <div className="flex items-center space-x-4">
+                                <img
+                                    src={serverpic}
+                                    alt="serverpic"
+                                    className="h-14 w-14 rounded-full object-cover border-2 border-gray-700"
+                                />
+                                <div>
+                                    <h2 className="text-lg font-semibold">{result.name || 'No Name'}</h2>
+                                    <p className="text-sm text-gray-400">{result.category || 'No Category'}</p>
+                                </div>
+                            </div>
+
+                            {/* Additional Information */}
+                            <div className="text-sm text-gray-300">
+                                <p><strong>Users:</strong> {result.users || 'N/A'}</p>
+                                <p><strong>Description:</strong> {result.description || 'No Description'}</p>
+
+                                {/* Tags */}
+                                {result.tags && (
+                                    <div className="mt-2">
+                                        <strong>Tags:</strong>
+                                        <div className="flex flex-wrap gap-2 mt-1">
+                                            {(Array.isArray(result.tags)
+                                                ? result.tags
+                                                : (result.tags || '').split(',')).map((tag, i) => (
+                                                <span
+                                                    key={i}
+                                                    className="bg-gray-700 px-3 py-1 rounded-full text-xs"
+                                                >
+                                                    {tag.trim()}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Language */}
+                                <p><strong>Language:</strong> {result.language || 'Not Specified'}</p>
+
+                                {/* NSFW Status */}
+                                <p>
+                                    <strong>NSFW:</strong>{' '}
+                                    <span
+                                        className={`font-bold ${
+                                            result.nsfw ? 'text-red-500' : 'text-green-500'
+                                        }`}
+                                    >
+                                        {result.nsfw ? 'Yes' : 'No'}
+                                    </span>
+                                </p>
+
+                                {/* WhatsApp Link */}
+                                {result.whatsappLink && (
+                                    <p>
+                                        <strong>WhatsApp:</strong>{' '}
+                                        <a
+                                            href={result.whatsappLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 underline"
+                                        >
+                                            Open Chat
+                                        </a>
+                                    </p>
+                                )}
+
+                                {/* QR Code */}
+                                {result.qrCode && (
+                                    <div className="mt-4">
+                                        <strong>QR Code:</strong>
+                                        <img
+                                            src={result.qrCode || serverpic}
+                                            alt="QR Code"
+                                            className="h-24 w-24 mt-2 rounded-lg"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
+    );
+};
 
-        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-[200px] rounded-lg p-4'>
-          <div className='flex flex-row justify-items-end'>
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <p>(14 reviews)</p>
-          </div>
-          <div className='flex flex-row mt-4'>
-            <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-            <div>
-              <h2>Ecom warriors</h2>
-              <button>9891 user</button>
-              <button>category name</button>
-            </div>
-          </div>
-        </div>
-
-        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
-          <div className='flex flex-row justify-items-end'>
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <p>(14 reviews)</p>
-          </div>
-          <div className='flex flex-row mt-4'>
-            <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-            <div>
-              <h2 className='mx-1'>Ecom warriors</h2>
-              <button className='mx-1 bg-indigo-700 px-2 py-1 rounded-lg'>9891 user</button>
-              <button className='mx-1'>category name</button>
-            </div>
-          </div>
-          {/*tags*/}
-          <div>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>CHILL</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>ACTIVE</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CHAT</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VC</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CALLS</button>
-          </div>
-          <div className='text-base whitespace-pre-line'>
-            🎌𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀🎌 東京卍リベンジャーズ
-            [ discord.gg/tokyorevengers ]
-            [ official r/TokyoRevengers Subreddit Server ]
-
-            - Discord server dedicated to Tokyo Revengers Anime/Manga
-            - TR Discussions with a great community!
-            - ACTIVE CHAT and FRIENDLY STAFF!
-            - LEVEL 3 BOOST
-            - BEST TOKYO REVENGERS EMOTES RIGHT HERE!
-            - BEST TOKYO REVENGERS SERVER RIGHT HERE!
-
-            NOTE:
-            ⚠️𝗜𝗳 𝘆𝗼𝘂 𝗮𝗿𝗲 𝗻𝗼𝘁 𝗳𝗮𝗺𝗶𝗹𝗶𝗮𝗿 𝘄𝗶𝘁𝗵 𝗧𝗵𝗲 𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀 𝗺𝗮𝗻𝗴𝗮 𝘀𝗲𝗿𝗶𝗲𝘀, 𝘁𝗵𝗲 卍 𝘀𝘆𝗺𝗯𝗼𝗹 𝗶𝗻 𝘁𝗵𝗲 𝗻𝗮𝗺𝗲 𝗼𝗳 𝘁𝗵𝗶𝘀 𝘀𝗲𝗿𝘃𝗲𝗿 𝗶𝘀 𝗻𝗼𝘁 𝗶𝗻𝘁𝗲𝗻𝗱𝗲𝗱 𝘁𝗼 𝗯𝗲 𝘁𝗵𝗲 𝗡𝗮𝘇𝗶 𝘀𝘆𝗺𝗯𝗼𝗹. 𝗜𝘁 𝗶𝘀 𝘁𝗵𝗲 𝗠𝗮𝗻𝗷𝗶 𝘀𝘆𝗺𝗯𝗼𝗹, 𝘂𝘀𝗲𝗱 𝗶𝗻 𝗕𝘂𝗱𝗱𝗵𝗶𝘀𝘁 𝘁𝗲𝗺𝗽𝗹𝗲𝘀 𝗼𝗳 𝗝𝗮𝗽𝗮𝗻. 𝗪𝗲 𝗱𝗼 𝗻𝗼𝘁 𝘀𝘂𝗽𝗽𝗼𝗿𝘁 𝗡𝗮𝘇𝗶𝘀𝗺 𝗶𝗻 𝗮𝗻𝘆 𝘄𝗮𝘆. ⚠️
-            [ Join today. ] 🇯🇵
-          </div>
-        </div>
-        {/*This is it */}
-        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
-          <div className='flex flex-row justify-items-end'>
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <p>(14 reviews)</p>
-          </div>
-          <div className='flex flex-row mt-4'>
-            <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-            <div>
-              <h2 className='mx-1'>Ecom warriors</h2>
-              <button className='mx-1 bg-indigo-700 px-2 py-1 rounded-lg'>9891 user</button>
-              <button className='mx-1'>category name</button>
-            </div>
-          </div>
-          {/*tags*/}
-          <div>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>CHILL</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>ACTIVE</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CHAT</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VC</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CALLS</button>
-          </div>
-          <div className='text-base whitespace-pre-line'>
-            🎌𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀🎌 東京卍リベンジャーズ
-            [ discord.gg/tokyorevengers ]
-            [ official r/TokyoRevengers Subreddit Server ]
-
-            - Discord server dedicated to Tokyo Revengers Anime/Manga
-            - TR Discussions with a great community!
-            - ACTIVE CHAT and FRIENDLY STAFF!
-            - LEVEL 3 BOOST
-            - BEST TOKYO REVENGERS EMOTES RIGHT HERE!
-            - BEST TOKYO REVENGERS SERVER RIGHT HERE!
-
-            NOTE:
-            ⚠️𝗜𝗳 𝘆𝗼𝘂 𝗮𝗿𝗲 𝗻𝗼𝘁 𝗳𝗮𝗺𝗶𝗹𝗶𝗮𝗿 𝘄𝗶𝘁𝗵 𝗧𝗵𝗲 𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀 𝗺𝗮𝗻𝗴𝗮 𝘀𝗲𝗿𝗶𝗲𝘀, 𝘁𝗵𝗲 卍 𝘀𝘆𝗺𝗯𝗼𝗹 𝗶𝗻 𝘁𝗵𝗲 𝗻𝗮𝗺𝗲 𝗼𝗳 𝘁𝗵𝗶𝘀 𝘀𝗲𝗿𝘃𝗲𝗿 𝗶𝘀 𝗻𝗼𝘁 𝗶𝗻𝘁𝗲𝗻𝗱𝗲𝗱 𝘁𝗼 𝗯𝗲 𝘁𝗵𝗲 𝗡𝗮𝘇𝗶 𝘀𝘆𝗺𝗯𝗼𝗹. 𝗜𝘁 𝗶𝘀 𝘁𝗵𝗲 𝗠𝗮𝗻𝗷𝗶 𝘀𝘆𝗺𝗯𝗼𝗹, 𝘂𝘀𝗲𝗱 𝗶𝗻 𝗕𝘂𝗱𝗱𝗵𝗶𝘀𝘁 𝘁𝗲𝗺𝗽𝗹𝗲𝘀 𝗼𝗳 𝗝𝗮𝗽𝗮𝗻. 𝗪𝗲 𝗱𝗼 𝗻𝗼𝘁 𝘀𝘂𝗽𝗽𝗼𝗿𝘁 𝗡𝗮𝘇𝗶𝘀𝗺 𝗶𝗻 𝗮𝗻𝘆 𝘄𝗮𝘆. ⚠️
-            [ Join today. ] 🇯🇵
-          </div>
-        </div>
-        <div className='bg-gray-700 text-white text-2xl flex flex-col justify-center items-center h-fit rounded-lg p-4'>
-          <div className='flex flex-row justify-items-end'>
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <p>(14 reviews)</p>
-          </div>
-          <div className='flex flex-row mt-4'>
-            <img src={serverpic} alt="serverpic" className="h-10 w-auto rounded-xl mr-2" />
-            <div>
-              <h2 className='mx-1'>Ecom warriors</h2>
-              <button className='mx-1 bg-indigo-700 px-2 py-1 rounded-lg'>9891 user</button>
-              <button className='mx-1'>category name</button>
-            </div>
-          </div>
-          {/*tags*/}
-          <div>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>CHILL</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>ACTIVE</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CHAT</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VC</button>
-            <button className='text-xs mx-2 px-1 py-1 font-sans bg-gray-700 text-sm font-medium'>VOICE-CALLS</button>
-          </div>
-          <div className='text-base whitespace-pre-line'>
-            🎌𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀🎌 東京卍リベンジャーズ
-            [ discord.gg/tokyorevengers ]
-            [ official r/TokyoRevengers Subreddit Server ]
-
-            - Discord server dedicated to Tokyo Revengers Anime/Manga
-            - TR Discussions with a great community!
-            - ACTIVE CHAT and FRIENDLY STAFF!
-            - LEVEL 3 BOOST
-            - BEST TOKYO REVENGERS EMOTES RIGHT HERE!
-            - BEST TOKYO REVENGERS SERVER RIGHT HERE!
-
-            NOTE:
-            ⚠️𝗜𝗳 𝘆𝗼𝘂 𝗮𝗿𝗲 𝗻𝗼𝘁 𝗳𝗮𝗺𝗶𝗹𝗶𝗮𝗿 𝘄𝗶𝘁𝗵 𝗧𝗵𝗲 𝗧𝗼𝗸𝘆𝗼 𝗥𝗲𝘃𝗲𝗻𝗴𝗲𝗿𝘀 𝗺𝗮𝗻𝗴𝗮 𝘀𝗲𝗿𝗶𝗲𝘀, 𝘁𝗵𝗲 卍 𝘀𝘆𝗺𝗯𝗼𝗹 𝗶𝗻 𝘁𝗵𝗲 𝗻𝗮𝗺𝗲 𝗼𝗳 𝘁𝗵𝗶𝘀 𝘀𝗲𝗿𝘃𝗲𝗿 𝗶𝘀 𝗻𝗼𝘁 𝗶𝗻𝘁𝗲𝗻𝗱𝗲𝗱 𝘁𝗼 𝗯𝗲 𝘁𝗵𝗲 𝗡𝗮𝘇𝗶 𝘀𝘆𝗺𝗯𝗼𝗹. 𝗜𝘁 𝗶𝘀 𝘁𝗵𝗲 𝗠𝗮𝗻𝗷𝗶 𝘀𝘆𝗺𝗯𝗼𝗹, 𝘂𝘀𝗲𝗱 𝗶𝗻 𝗕𝘂𝗱𝗱𝗵𝗶𝘀𝘁 𝘁𝗲𝗺𝗽𝗹𝗲𝘀 𝗼𝗳 𝗝𝗮𝗽𝗮𝗻. 𝗪𝗲 𝗱𝗼 𝗻𝗼𝘁 𝘀𝘂𝗽𝗽𝗼𝗿𝘁 𝗡𝗮𝘇𝗶𝘀𝗺 𝗶𝗻 𝗮𝗻𝘆 𝘄𝗮𝘆. ⚠️
-            [ Join today. ] 🇯🇵
-          </div>
-        </div>
-    </div>
-  )
-}
-
-export default SearchedList
+export default SearchedList;
