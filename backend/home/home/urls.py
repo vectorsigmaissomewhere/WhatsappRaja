@@ -6,6 +6,7 @@ from Test.views import TestDetailView
 from rest_framework.routers import DefaultRouter
 from whatgroup.views import CategoryViewSet
 from whatgroup.views import LanguageViewSet
+from whatgroup.views import TagViewSet
 from review.views import WReviewModelViewSet
 from review.views import averagereviewget
 from search.views import GroupSearchAPI
@@ -52,6 +53,10 @@ categorysearchrouter.register('categorysearch', CategorySearchAPI, basename='cat
 tagsearchrouter = DefaultRouter()
 tagsearchrouter.register('tagsearch', TagSearchAPI, basename='tagsearch')
 
+# creating router for getting top 70 tags 
+toptagsearchrouter = DefaultRouter()
+toptagsearchrouter.register('toptagsearch', TagViewSet, basename='toptagsearch')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/', include('account.urls')),
@@ -61,6 +66,7 @@ urlpatterns = [
     path('', include(categoryrouter.urls)),
     path('', include(languagerouter.urls)),
     path('', include(reviewlistrouter.urls)),
+    path('', include(toptagsearchrouter.urls)),
     # Test url 
     path('testgroupapi/<int:pk>/', TestDetailView.as_view(), name='testgroup-detail'),
     path('getit/', getallreviews, name='getit'),

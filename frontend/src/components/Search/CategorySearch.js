@@ -17,6 +17,8 @@ const CategorySearch = () => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  
   return (
     <div className='flex flex-col bg-black text-white font-sans bg-gray-700 gap-x-5'>
       {/* left side */}

@@ -68,6 +68,17 @@ class CategoryViewSet(ReadOnlyModelViewSet):
         return self.querysetlist
     serializer_class = CategorySerializer
 
+class TagViewSet(ReadOnlyModelViewSet):
+    permission_classes = [AllowAny]
+    def get_queryset(self):
+        return Wgroup.objects.values_list('tags', flat=True).distinct()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        return Response({'tags': queryset})
+    
+
+
 class LanguageViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     querysetlist = [{"language": v} for k, v in Wgroup.LANGUAGE_CHOICES]
