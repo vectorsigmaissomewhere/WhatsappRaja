@@ -14,6 +14,7 @@ from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import AllowAny
+from collections import Counter
 
 # This viewset is for public like everyone can retrieve data, list data, create data 
 class WGroupModelViewSet(viewsets.ViewSet):
@@ -70,12 +71,21 @@ class CategoryViewSet(ReadOnlyModelViewSet):
 
 class TagViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
+
     def get_queryset(self):
-        return Wgroup.objects.values_list('tags', flat=True).distinct()
+        tag_strings = Wgroup.objects.values_list('tags', flat=True)
+        return tag_strings
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        return Response({'tags': queryset})
+        all_tags = []
+        for tag_string in queryset:
+            if tag_string:
+                all_tags.extend(tag.strip() for tag in tag_string.split(','))
+        tag_counts = Counter(all_tags)
+        most_common_tags = tag_counts.most_common(60)
+        tags = [tag for tag, count in most_common_tags]
+        return Response({'most_common_tags': tags})
     
 
 

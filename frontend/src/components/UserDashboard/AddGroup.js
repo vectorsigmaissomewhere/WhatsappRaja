@@ -47,9 +47,9 @@ const AddGroup = () => {
     return () => {
       document.removeEventListener('click', handleClickProfileOutside);
     };
-  }, [profileRef, buttonProfileRef]);
+  }, []);
 
-  // adding group 
+  // Add Group state and logic
   const token = localStorage.getItem('authToken');
   const decodedToken = decodeToken(token);
   const [formData, setFormData] = useState({
@@ -69,7 +69,6 @@ const AddGroup = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
@@ -104,10 +103,6 @@ const AddGroup = () => {
     form.append("user", decodedToken.user_id);
 
     try {
-      console.log(token);
-      form.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-      });
       const response = await axios.post("http://127.0.0.1:8000/wgroupapi/", form, config);
       setMessage(response.data.msg || "Group added successfully!");
       setFormData({
@@ -123,6 +118,52 @@ const AddGroup = () => {
       });
     } catch (error) {
       setMessage(error.response?.data?.error || "Failed to add group.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Change Password state and logic
+  const [passwordFormData, setPasswordFormData] = useState({
+    password: "",
+    password2: "",
+  });
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    const form2 = new FormData();
+    Object.keys(passwordFormData).forEach((key) => {
+      form2.append(key, passwordFormData[key]);
+    });
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/user/changepassword/",
+        form2,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setMessage(response.data.msg || "Password changed successfully!");
+      setPasswordFormData({
+        password: "",
+        password2: "",
+      });
+    } catch (error) {
+      setMessage(error.response?.data?.error || "Failed to change password.");
     } finally {
       setLoading(false);
     }
@@ -148,7 +189,7 @@ const AddGroup = () => {
           </button>
         </div>
 
-        {isOpen && !isButtonOpen && (
+        {isOpen && (
           <div className="mx-4" ref={catRef}>
             {message && <p className={`mb-4 ${message.includes("Failed") ? "text-red-600" : "text-green-600"}`}>{message}</p>}
             <form onSubmit={handleGroupSubmit}>
@@ -274,38 +315,45 @@ const AddGroup = () => {
             </form>
           </div>
         )}
-        {isButtonOpen && !isOpen && (
-          <div ref={profileRef}>
-            <form>
-              <div>
-                {/* Group Name */}
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="groupName" className="py-2 text-lg">
-                    Enter New Password
-                  </label>
-                  <input
-                    id="newPassword"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                  />
-                </div>
-                <div className="flex flex-col mx-4">
-                  <label htmlFor="re-newPassword" className="py-2 text-lg">
-                    Retype New Password
-                  </label>
-                  <input
-                    id="groupName"
-                    className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
-                  />
-                </div>
+
+        {isButtonOpen && (
+          <div className="mx-4" ref={profileRef}>
+            <form onSubmit={handlePasswordSubmit}>
+              <div className="flex flex-col mx-4">
+                <label htmlFor="password" className="py-2 text-lg">New Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={passwordFormData.password}
+                  onChange={handlePasswordChange}
+                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                  required
+                />
+              </div>
+              <div className="flex flex-col mx-4">
+                <label htmlFor="password2" className="py-2 text-lg">Confirm Password</label>
+                <input
+                  type="password"
+                  name="password2"
+                  value={passwordFormData.password2}
+                  onChange={handlePasswordChange}
+                  className="shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700"
+                  required
+                />
+              </div>
+              <div className="py-2 mx-20 mt-4">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                  disabled={loading}
+                >
+                  {loading ? "Changing..." : "Change Password"}
+                </button>
               </div>
             </form>
-            <div className="mx-20 mt-4">
-              <button type="submit" className="bg-cyan-500 px-4 py-2 text-white rounded">
-                Submit
-              </button>
-            </div>
           </div>
         )}
+
       </div>
     </>
   );
