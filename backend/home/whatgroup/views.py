@@ -16,6 +16,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import AllowAny
 from collections import Counter
 
+
 # This viewset is for public like everyone can retrieve data, list data, create data 
 class WGroupModelViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
