@@ -14,7 +14,7 @@ const AddReview = () => {
 
   const [formData, setFormData] = useState({
     wgroup: group_id,
-    user: decodedToken.user_id,
+    user: decodedToken?.user_id || '',
     rating: "",
     comment_text: "",
   });
